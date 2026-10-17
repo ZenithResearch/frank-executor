@@ -1,0 +1,15 @@
+{
+  "schema": "frank.config.v1",
+  "environment": "development",
+  "runtime_endpoint": "http://127.0.0.1:8092",
+  "journal": "/tmp/frank-local-evidence.db",
+  "allow_local_dev_untrusted": true,
+  "integrations": {
+    "schema": "frank.integrations.v1",
+    "integrations": [
+      {"id":"agent-local","plugin":"frank.hermes.v1","enabled":true,"config":{"model":"configured-hermes-model","toolsets":[],"routes":["local"],"max_iterations":10}},
+      {"id":"human-review","plugin":"frank.matrix.v1","enabled":false,"config":{"homeserver":"https://matrix.example.invalid","account_id":"@frank:example.invalid","token_ref":"secret:env:FRANK_MATRIX_TOKEN","routes":{"review":{"room_id":"!review:example.invalid","sender_id":"@reviewer:example.invalid"}}}}
+    ],
+    "actors": [{"actor_id":"frank-local","integration_id":"agent-local","capabilities":["compute"],"resources":[],"route":"local"}]
+  }
+}

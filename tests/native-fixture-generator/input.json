@@ -1,0 +1,416 @@
+[
+  {
+    "name": "success",
+    "work": {
+      "actor_id": "worker",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "effect_id": "effect-1",
+      "inputs": {
+        "number": 7
+      },
+      "integration_id": "fixture",
+      "operation": "compute",
+      "output_types": {
+        "answer": {
+          "kind": "integer"
+        }
+      },
+      "route": "local",
+      "schema": "frank.work.v1",
+      "scope": "answer"
+    },
+    "result": {
+      "schema": "frank.result.v1",
+      "event_id": "result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "actor_id": "worker",
+      "integration_id": "fixture",
+      "route": "local",
+      "effect_id": "effect-1",
+      "provider_reference": "provider-effect-1",
+      "outcome": "succeeded",
+      "outputs": {
+        "answer": 14
+      }
+    },
+    "payload": "{\"result\":{\"actor_id\":\"worker\",\"binding\":{\"attempt_id\":\"attempt\",\"fence\":1,\"run_id\":\"run\",\"step_id\":\"step\"},\"effect_id\":\"effect-1\",\"event_id\":\"result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6\",\"integration_id\":\"fixture\",\"outcome\":\"succeeded\",\"outputs\":{\"answer\":14},\"provider_reference\":\"provider-effect-1\",\"route\":\"local\",\"schema\":\"frank.result.v1\"},\"schema\":\"frank.native-result-payload.v1\",\"work_sha256\":\"4cf8c0c8e55c73d7925acbd1677b572a9cfcd547c589460239a8065c342e8642\"}",
+    "audience": "frank://result-receiver",
+    "operation": "frank.result.attest.v1",
+    "subject": "synthetic-subject",
+    "opcode": 200,
+    "nonce": 2,
+    "issued": 1000
+  },
+  {
+    "name": "renewed",
+    "work": {
+      "actor_id": "worker",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "effect_id": "effect-1",
+      "inputs": {
+        "number": 7
+      },
+      "integration_id": "fixture",
+      "operation": "compute",
+      "output_types": {
+        "answer": {
+          "kind": "integer"
+        }
+      },
+      "route": "local",
+      "schema": "frank.work.v1",
+      "scope": "answer"
+    },
+    "result": {
+      "schema": "frank.result.v1",
+      "event_id": "result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "actor_id": "worker",
+      "integration_id": "fixture",
+      "route": "local",
+      "effect_id": "effect-1",
+      "provider_reference": "provider-effect-1",
+      "outcome": "succeeded",
+      "outputs": {
+        "answer": 14
+      }
+    },
+    "payload": "{\"result\":{\"actor_id\":\"worker\",\"binding\":{\"attempt_id\":\"attempt\",\"fence\":1,\"run_id\":\"run\",\"step_id\":\"step\"},\"effect_id\":\"effect-1\",\"event_id\":\"result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6\",\"integration_id\":\"fixture\",\"outcome\":\"succeeded\",\"outputs\":{\"answer\":14},\"provider_reference\":\"provider-effect-1\",\"route\":\"local\",\"schema\":\"frank.result.v1\"},\"schema\":\"frank.native-result-payload.v1\",\"work_sha256\":\"4cf8c0c8e55c73d7925acbd1677b572a9cfcd547c589460239a8065c342e8642\"}",
+    "audience": "frank://result-receiver",
+    "operation": "frank.result.attest.v1",
+    "subject": "synthetic-subject",
+    "opcode": 200,
+    "nonce": 3,
+    "issued": 1030
+  },
+  {
+    "name": "wrong-audience",
+    "work": {
+      "actor_id": "worker",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "effect_id": "effect-1",
+      "inputs": {
+        "number": 7
+      },
+      "integration_id": "fixture",
+      "operation": "compute",
+      "output_types": {
+        "answer": {
+          "kind": "integer"
+        }
+      },
+      "route": "local",
+      "schema": "frank.work.v1",
+      "scope": "answer"
+    },
+    "result": {
+      "schema": "frank.result.v1",
+      "event_id": "result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "actor_id": "worker",
+      "integration_id": "fixture",
+      "route": "local",
+      "effect_id": "effect-1",
+      "provider_reference": "provider-effect-1",
+      "outcome": "succeeded",
+      "outputs": {
+        "answer": 14
+      }
+    },
+    "payload": "{\"result\":{\"actor_id\":\"worker\",\"binding\":{\"attempt_id\":\"attempt\",\"fence\":1,\"run_id\":\"run\",\"step_id\":\"step\"},\"effect_id\":\"effect-1\",\"event_id\":\"result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6\",\"integration_id\":\"fixture\",\"outcome\":\"succeeded\",\"outputs\":{\"answer\":14},\"provider_reference\":\"provider-effect-1\",\"route\":\"local\",\"schema\":\"frank.result.v1\"},\"schema\":\"frank.native-result-payload.v1\",\"work_sha256\":\"4cf8c0c8e55c73d7925acbd1677b572a9cfcd547c589460239a8065c342e8642\"}",
+    "audience": "runtime://receiver-local",
+    "operation": "frank.result.attest.v1",
+    "subject": "synthetic-subject",
+    "opcode": 200,
+    "nonce": 2,
+    "issued": 1000
+  },
+  {
+    "name": "wrong-operation",
+    "work": {
+      "actor_id": "worker",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "effect_id": "effect-1",
+      "inputs": {
+        "number": 7
+      },
+      "integration_id": "fixture",
+      "operation": "compute",
+      "output_types": {
+        "answer": {
+          "kind": "integer"
+        }
+      },
+      "route": "local",
+      "schema": "frank.work.v1",
+      "scope": "answer"
+    },
+    "result": {
+      "schema": "frank.result.v1",
+      "event_id": "result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "actor_id": "worker",
+      "integration_id": "fixture",
+      "route": "local",
+      "effect_id": "effect-1",
+      "provider_reference": "provider-effect-1",
+      "outcome": "succeeded",
+      "outputs": {
+        "answer": 14
+      }
+    },
+    "payload": "{\"result\":{\"actor_id\":\"worker\",\"binding\":{\"attempt_id\":\"attempt\",\"fence\":1,\"run_id\":\"run\",\"step_id\":\"step\"},\"effect_id\":\"effect-1\",\"event_id\":\"result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6\",\"integration_id\":\"fixture\",\"outcome\":\"succeeded\",\"outputs\":{\"answer\":14},\"provider_reference\":\"provider-effect-1\",\"route\":\"local\",\"schema\":\"frank.result.v1\"},\"schema\":\"frank.native-result-payload.v1\",\"work_sha256\":\"4cf8c0c8e55c73d7925acbd1677b572a9cfcd547c589460239a8065c342e8642\"}",
+    "audience": "frank://result-receiver",
+    "operation": "runtime.run.get.v1",
+    "subject": "synthetic-subject",
+    "opcode": 200,
+    "nonce": 2,
+    "issued": 1000
+  },
+  {
+    "name": "wrong-subject",
+    "work": {
+      "actor_id": "worker",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "effect_id": "effect-1",
+      "inputs": {
+        "number": 7
+      },
+      "integration_id": "fixture",
+      "operation": "compute",
+      "output_types": {
+        "answer": {
+          "kind": "integer"
+        }
+      },
+      "route": "local",
+      "schema": "frank.work.v1",
+      "scope": "answer"
+    },
+    "result": {
+      "schema": "frank.result.v1",
+      "event_id": "result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "actor_id": "worker",
+      "integration_id": "fixture",
+      "route": "local",
+      "effect_id": "effect-1",
+      "provider_reference": "provider-effect-1",
+      "outcome": "succeeded",
+      "outputs": {
+        "answer": 14
+      }
+    },
+    "payload": "{\"result\":{\"actor_id\":\"worker\",\"binding\":{\"attempt_id\":\"attempt\",\"fence\":1,\"run_id\":\"run\",\"step_id\":\"step\"},\"effect_id\":\"effect-1\",\"event_id\":\"result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6\",\"integration_id\":\"fixture\",\"outcome\":\"succeeded\",\"outputs\":{\"answer\":14},\"provider_reference\":\"provider-effect-1\",\"route\":\"local\",\"schema\":\"frank.result.v1\"},\"schema\":\"frank.native-result-payload.v1\",\"work_sha256\":\"4cf8c0c8e55c73d7925acbd1677b572a9cfcd547c589460239a8065c342e8642\"}",
+    "audience": "frank://result-receiver",
+    "operation": "frank.result.attest.v1",
+    "subject": "other-subject",
+    "opcode": 200,
+    "nonce": 2,
+    "issued": 1000
+  },
+  {
+    "name": "wrong-opcode",
+    "work": {
+      "actor_id": "worker",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "effect_id": "effect-1",
+      "inputs": {
+        "number": 7
+      },
+      "integration_id": "fixture",
+      "operation": "compute",
+      "output_types": {
+        "answer": {
+          "kind": "integer"
+        }
+      },
+      "route": "local",
+      "schema": "frank.work.v1",
+      "scope": "answer"
+    },
+    "result": {
+      "schema": "frank.result.v1",
+      "event_id": "result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "actor_id": "worker",
+      "integration_id": "fixture",
+      "route": "local",
+      "effect_id": "effect-1",
+      "provider_reference": "provider-effect-1",
+      "outcome": "succeeded",
+      "outputs": {
+        "answer": 14
+      }
+    },
+    "payload": "{\"result\":{\"actor_id\":\"worker\",\"binding\":{\"attempt_id\":\"attempt\",\"fence\":1,\"run_id\":\"run\",\"step_id\":\"step\"},\"effect_id\":\"effect-1\",\"event_id\":\"result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6\",\"integration_id\":\"fixture\",\"outcome\":\"succeeded\",\"outputs\":{\"answer\":14},\"provider_reference\":\"provider-effect-1\",\"route\":\"local\",\"schema\":\"frank.result.v1\"},\"schema\":\"frank.native-result-payload.v1\",\"work_sha256\":\"4cf8c0c8e55c73d7925acbd1677b572a9cfcd547c589460239a8065c342e8642\"}",
+    "audience": "frank://result-receiver",
+    "operation": "frank.result.attest.v1",
+    "subject": "synthetic-subject",
+    "opcode": 201,
+    "nonce": 2,
+    "issued": 1000
+  },
+  {
+    "name": "changed-body-same-nonce",
+    "work": {
+      "actor_id": "worker",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "effect_id": "effect-1",
+      "inputs": {
+        "number": 7
+      },
+      "integration_id": "fixture",
+      "operation": "compute",
+      "output_types": {
+        "answer": {
+          "kind": "integer"
+        }
+      },
+      "route": "local",
+      "schema": "frank.work.v1",
+      "scope": "answer"
+    },
+    "result": {
+      "schema": "frank.result.v1",
+      "event_id": "result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "actor_id": "worker",
+      "integration_id": "fixture",
+      "route": "local",
+      "effect_id": "effect-1",
+      "provider_reference": "provider-effect-1",
+      "outcome": "succeeded",
+      "outputs": {
+        "answer": 99
+      }
+    },
+    "payload": "{\"result\":{\"actor_id\":\"worker\",\"binding\":{\"attempt_id\":\"attempt\",\"fence\":1,\"run_id\":\"run\",\"step_id\":\"step\"},\"effect_id\":\"effect-1\",\"event_id\":\"result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6\",\"integration_id\":\"fixture\",\"outcome\":\"succeeded\",\"outputs\":{\"answer\":99},\"provider_reference\":\"provider-effect-1\",\"route\":\"local\",\"schema\":\"frank.result.v1\"},\"schema\":\"frank.native-result-payload.v1\",\"work_sha256\":\"4cf8c0c8e55c73d7925acbd1677b572a9cfcd547c589460239a8065c342e8642\"}",
+    "audience": "frank://result-receiver",
+    "operation": "frank.result.attest.v1",
+    "subject": "synthetic-subject",
+    "opcode": 200,
+    "nonce": 2,
+    "issued": 1000
+  },
+  {
+    "name": "failed",
+    "work": {
+      "actor_id": "worker",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "effect_id": "effect-1",
+      "inputs": {
+        "number": 7
+      },
+      "integration_id": "fixture",
+      "operation": "compute",
+      "output_types": {
+        "answer": {
+          "kind": "integer"
+        }
+      },
+      "route": "local",
+      "schema": "frank.work.v1",
+      "scope": "answer"
+    },
+    "result": {
+      "schema": "frank.result.v1",
+      "event_id": "result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6",
+      "binding": {
+        "attempt_id": "attempt",
+        "fence": 1,
+        "run_id": "run",
+        "step_id": "step"
+      },
+      "actor_id": "worker",
+      "integration_id": "fixture",
+      "route": "local",
+      "effect_id": "effect-1",
+      "provider_reference": "provider-effect-1",
+      "outcome": "failed",
+      "outputs": {}
+    },
+    "payload": "{\"result\":{\"actor_id\":\"worker\",\"binding\":{\"attempt_id\":\"attempt\",\"fence\":1,\"run_id\":\"run\",\"step_id\":\"step\"},\"effect_id\":\"effect-1\",\"event_id\":\"result-719dab5285bd74628bb15c98f44f192507a2ea90481833b6\",\"integration_id\":\"fixture\",\"outcome\":\"failed\",\"outputs\":{},\"provider_reference\":\"provider-effect-1\",\"route\":\"local\",\"schema\":\"frank.result.v1\"},\"schema\":\"frank.native-result-payload.v1\",\"work_sha256\":\"4cf8c0c8e55c73d7925acbd1677b572a9cfcd547c589460239a8065c342e8642\"}",
+    "audience": "frank://result-receiver",
+    "operation": "frank.result.attest.v1",
+    "subject": "synthetic-subject",
+    "opcode": 200,
+    "nonce": 4,
+    "issued": 1000
+  }
+]

@@ -1,0 +1,274 @@
+[
+  {
+    "consumer": "summarize_packet",
+    "packet": "legacy",
+    "result": {
+      "case_id": null,
+      "feedback_item_count": 1,
+      "files_to_inspect_first": [],
+      "implementation_task_count": 1,
+      "must_fix_before_delegation": [
+        "source binding missing or deferred for: fb_001"
+      ],
+      "packet_status": "needs_source_binding",
+      "recommended_first_files": [
+        null
+      ],
+      "review_id": null,
+      "source_binding_statuses": []
+    },
+    "scenario": "source-available",
+    "status": "returned",
+    "step": "step_5"
+  },
+  {
+    "consumer": "validate_packet",
+    "packet": "legacy",
+    "result": {
+      "case_id": null,
+      "feedback_item_count": 1,
+      "files_to_inspect_first": [],
+      "implementation_task_count": 1,
+      "must_fix_before_delegation": [
+        "source binding missing or deferred for: fb_001"
+      ],
+      "packet_status": "needs_source_binding",
+      "recommended_first_files": [
+        null
+      ],
+      "review_id": null,
+      "source_binding_statuses": []
+    },
+    "scenario": "source-available",
+    "status": "returned",
+    "step": "step_5"
+  },
+  {
+    "consumer": "summarize_packet",
+    "error": {
+      "message": "'str' object has no attribute 'get'",
+      "type": "AttributeError"
+    },
+    "packet": "computed",
+    "scenario": "source-available",
+    "status": "raised",
+    "step": "step_5"
+  },
+  {
+    "consumer": "validate_packet",
+    "error": {
+      "message": "'str' object has no attribute 'get'",
+      "type": "AttributeError"
+    },
+    "packet": "computed",
+    "scenario": "source-available",
+    "status": "raised",
+    "step": "step_5"
+  },
+  {
+    "consumer": "summarize_packet",
+    "packet": "legacy",
+    "result": {
+      "case_id": null,
+      "feedback_item_count": 1,
+      "files_to_inspect_first": [
+        "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+      ],
+      "implementation_task_count": 1,
+      "must_fix_before_delegation": [],
+      "packet_status": "review_packet_ready",
+      "recommended_first_files": [
+        "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+      ],
+      "review_id": null,
+      "source_binding_statuses": [
+        "verified"
+      ]
+    },
+    "scenario": "source-available",
+    "status": "returned",
+    "step": "step_7"
+  },
+  {
+    "consumer": "validate_packet",
+    "packet": "legacy",
+    "result": {
+      "case_id": null,
+      "feedback_item_count": 1,
+      "files_to_inspect_first": [
+        "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+      ],
+      "implementation_task_count": 1,
+      "must_fix_before_delegation": [],
+      "packet_status": "review_packet_ready",
+      "recommended_first_files": [
+        "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+      ],
+      "review_id": null,
+      "source_binding_statuses": [
+        "verified"
+      ]
+    },
+    "scenario": "source-available",
+    "status": "returned",
+    "step": "step_7"
+  },
+  {
+    "consumer": "summarize_packet",
+    "error": {
+      "message": "'str' object has no attribute 'get'",
+      "type": "AttributeError"
+    },
+    "packet": "computed",
+    "scenario": "source-available",
+    "status": "raised",
+    "step": "step_7"
+  },
+  {
+    "consumer": "validate_packet",
+    "error": {
+      "message": "'str' object has no attribute 'get'",
+      "type": "AttributeError"
+    },
+    "packet": "computed",
+    "scenario": "source-available",
+    "status": "raised",
+    "step": "step_7"
+  },
+  {
+    "consumer": "summarize_packet",
+    "packet": "legacy",
+    "result": {
+      "case_id": null,
+      "feedback_item_count": 1,
+      "files_to_inspect_first": [],
+      "implementation_task_count": 1,
+      "must_fix_before_delegation": [
+        "source binding missing or deferred for: fb_001"
+      ],
+      "packet_status": "needs_source_binding",
+      "recommended_first_files": [
+        null
+      ],
+      "review_id": null,
+      "source_binding_statuses": []
+    },
+    "scenario": "source-unavailable",
+    "status": "returned",
+    "step": "step_5"
+  },
+  {
+    "consumer": "validate_packet",
+    "packet": "legacy",
+    "result": {
+      "case_id": null,
+      "feedback_item_count": 1,
+      "files_to_inspect_first": [],
+      "implementation_task_count": 1,
+      "must_fix_before_delegation": [
+        "source binding missing or deferred for: fb_001"
+      ],
+      "packet_status": "needs_source_binding",
+      "recommended_first_files": [
+        null
+      ],
+      "review_id": null,
+      "source_binding_statuses": []
+    },
+    "scenario": "source-unavailable",
+    "status": "returned",
+    "step": "step_5"
+  },
+  {
+    "consumer": "summarize_packet",
+    "error": {
+      "message": "'str' object has no attribute 'get'",
+      "type": "AttributeError"
+    },
+    "packet": "computed",
+    "scenario": "source-unavailable",
+    "status": "raised",
+    "step": "step_5"
+  },
+  {
+    "consumer": "validate_packet",
+    "error": {
+      "message": "'str' object has no attribute 'get'",
+      "type": "AttributeError"
+    },
+    "packet": "computed",
+    "scenario": "source-unavailable",
+    "status": "raised",
+    "step": "step_5"
+  },
+  {
+    "consumer": "summarize_packet",
+    "packet": "legacy",
+    "result": {
+      "case_id": null,
+      "feedback_item_count": 1,
+      "files_to_inspect_first": [],
+      "implementation_task_count": 1,
+      "must_fix_before_delegation": [
+        "source binding missing or deferred for: fb_001"
+      ],
+      "packet_status": "needs_source_binding",
+      "recommended_first_files": [
+        null
+      ],
+      "review_id": null,
+      "source_binding_statuses": [
+        "deferred"
+      ]
+    },
+    "scenario": "source-unavailable",
+    "status": "returned",
+    "step": "step_7"
+  },
+  {
+    "consumer": "validate_packet",
+    "packet": "legacy",
+    "result": {
+      "case_id": null,
+      "feedback_item_count": 1,
+      "files_to_inspect_first": [],
+      "implementation_task_count": 1,
+      "must_fix_before_delegation": [
+        "source binding missing or deferred for: fb_001"
+      ],
+      "packet_status": "needs_source_binding",
+      "recommended_first_files": [
+        null
+      ],
+      "review_id": null,
+      "source_binding_statuses": [
+        "deferred"
+      ]
+    },
+    "scenario": "source-unavailable",
+    "status": "returned",
+    "step": "step_7"
+  },
+  {
+    "consumer": "summarize_packet",
+    "error": {
+      "message": "'str' object has no attribute 'get'",
+      "type": "AttributeError"
+    },
+    "packet": "computed",
+    "scenario": "source-unavailable",
+    "status": "raised",
+    "step": "step_7"
+  },
+  {
+    "consumer": "validate_packet",
+    "error": {
+      "message": "'str' object has no attribute 'get'",
+      "type": "AttributeError"
+    },
+    "packet": "computed",
+    "scenario": "source-unavailable",
+    "status": "raised",
+    "step": "step_7"
+  }
+]

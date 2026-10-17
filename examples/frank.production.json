@@ -1,0 +1,5 @@
+{
+  "schema":"frank.config.v1","environment":"production","runtime_endpoint":"https://runtime.example.invalid",
+  "journal":"/var/lib/frank/evidence.db","allow_local_dev_untrusted":false,
+  "integrations":{"schema":"frank.integrations.v1","integrations":[],"actors":[]}
+}

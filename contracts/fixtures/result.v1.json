@@ -1,0 +1,19 @@
+{
+  "schema": "frank.result.v1",
+  "event_id": "result-example",
+  "binding": {
+    "run_id": "run-example",
+    "step_id": "compute",
+    "attempt_id": "attempt-example",
+    "fence": 1
+  },
+  "actor_id": "frank-example",
+  "integration_id": "example",
+  "route": "local",
+  "effect_id": "effect-example",
+  "provider_reference": "session-example",
+  "outcome": "succeeded",
+  "outputs": {
+    "answer": 14
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "review.independent-input-manifest.v1",
+  "resource_sha256": {
+    "personal-review-v1.json": "76b9c3f8481f0269dd3e30d45bda605c37abace8f3dceb5a617cf7eb3a642994",
+    "personal-review-v1.compiled.json": "6af2a1dd9a1331c371703ff41da770c76bfb63ff6ba8a80e56ef8a783d2dceda",
+    "personal-review-v1.md": "fdf04090ffa98b82c56af69cc9c947675c8f48a7c8c4897eb897f6c166b865dc",
+    "development-sop-v1.json": "05449a8f1757b630cf08121b0849fb3c056932713218f0043747f3eaa62d078d",
+    "development-sop-v1.compiled.json": "f99798f8306073446fed6847af1abd9da249c372a97dd6a330d791436081b6fd",
+    "development-sop-v1.md": "aacb8f845a2410af2bb85e44fb80331c65eb008e9fbb10a3ca051b5cb1fbd318",
+    "personal-review-v1.migration.json": "d5d6df4b9b6a8b352d9918a93d1d8528572e611f158c7caf49a756d9587496f3",
+    "personal-review-legacy.md": "257b5ccb6d7add490500983cf2c85b8157cbf919373bcb8199e2ff82fa7d829b"
+  },
+  "inputs_source": {
+    "path": "tests/fixtures/independent-review/inputs.json",
+    "sha256": "860f16b4814d1bf203ccd91c2d1ff4b4f66fc2d16839db2c9e73d5cdd6c7ef19",
+    "description": "De-identified demonstration input. Original private capture provenance is retained privately; this is not production evidence."
+  },
+  "golden_usage": "comparison harness only; never input to handlers",
+  "computed_expectation_sha256": {
+    "development-computed-v1.json": "8dca22aea531860ec97389275380a3d7ea62a928ec0b2751fe76631e1a9e38ba"
+  }
+}

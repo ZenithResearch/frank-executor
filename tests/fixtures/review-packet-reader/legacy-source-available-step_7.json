@@ -1,0 +1,284 @@
+{
+  "actionability": {
+    "actionable_now": [
+      {
+        "confidence": 0.72,
+        "feedback_item_id": "fb_001",
+        "reason": "feedback has target evidence and verified source binding",
+        "source_binding_status": "verified",
+        "target_refs": [
+          "button.review-dismiss"
+        ],
+        "type": "layout"
+      }
+    ],
+    "design_preference": [],
+    "discarded_or_filtered": [],
+    "needs_human_clarification": [],
+    "non_issue": []
+  },
+  "artifacts": {
+    "audio_asset_path": "/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/assets/review_1/audio_audio_1.webm",
+    "case_dir": "/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad",
+    "events_asset_path": "/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/assets/review_1/events_events_1.json",
+    "review_note_path": "/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/review_review_1.md",
+    "review_packet_path": "/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/review_packet.json",
+    "transcript_note_path": "/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/transcript_review_1.md"
+  },
+  "events": {
+    "count": 1,
+    "page_events": [],
+    "pointer_windows": [
+      {
+        "end_ms": 200,
+        "event_ids": [
+          1
+        ],
+        "id": "ptr_001",
+        "start_ms": 200,
+        "target_refs": [
+          "button.review-dismiss"
+        ]
+      }
+    ],
+    "scroll_events": [],
+    "stroke_groups": [],
+    "target_candidates": [
+      {
+        "aliases": [],
+        "component": "button.review-dismiss",
+        "event_count": 1,
+        "event_ids": [
+          1
+        ],
+        "first_elapsed_ms": 200,
+        "last_elapsed_ms": 200,
+        "resolution_status": "candidate",
+        "selectors": [
+          "button.review-dismiss"
+        ],
+        "source": "event.target",
+        "spatial_hint": {
+          "x": 10,
+          "y": 10
+        },
+        "target_ref": "button.review-dismiss"
+      }
+    ],
+    "target_events": [
+      {
+        "elapsed_ms": 200,
+        "event_id": 1,
+        "source": "event.target",
+        "target_ref": "button.review-dismiss",
+        "type": "click",
+        "x": 10,
+        "y": 10
+      }
+    ],
+    "type_counts": {
+      "click": 1
+    }
+  },
+  "feedback_items": [
+    {
+      "confidence": 0.72,
+      "evidence": {
+        "event_ids": [
+          1
+        ],
+        "stroke_ids": [],
+        "transcript_segment_ids": [
+          "seg_001"
+        ]
+      },
+      "id": "fb_001",
+      "normalized_claim": "The referenced UI element is not centered.",
+      "reviewer_quote": "This button is not centered.",
+      "severity": "medium",
+      "target_refs": [
+        "button.review-dismiss"
+      ],
+      "type": "layout"
+    }
+  ],
+  "implementation_handoff": {
+    "files_to_inspect_first": [
+      "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+    ],
+    "implementation_tasks": [
+      {
+        "acceptance_checks": [
+          "Verify the reviewed UI no longer exhibits: The referenced UI element is not centered.",
+          "Verify the change is limited to the reviewed surface unless the codebase requires shared component changes.",
+          "Verify no unrelated redesign or issue-note creation was introduced."
+        ],
+        "confidence": 0.72,
+        "constraints": [
+          "Preserve reviewer voice and direct evidence.",
+          "Do not invent acceptance criteria beyond the reviewer's stated feedback.",
+          "Preserve existing UX unless the reviewer explicitly criticized it."
+        ],
+        "do_not_do": [
+          "Do not create ISS notes from this pipeline output.",
+          "Do not treat silent gestures as feedback without matching speech.",
+          "Do not infer unstated redesign requirements."
+        ],
+        "evidence": {
+          "event_ids": [
+            1
+          ],
+          "quote": "This button is not centered.",
+          "stroke_ids": [],
+          "transcript_segment_ids": [
+            "seg_001"
+          ]
+        },
+        "feedback_item_id": "fb_001",
+        "files_to_inspect_first": [
+          "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+        ],
+        "open_questions": [],
+        "primary_files": [
+          "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+        ],
+        "problem": "The referenced UI element is not centered.",
+        "recommended_first_file": "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx",
+        "reviewer_quote": "This button is not centered.",
+        "selectors": [
+          "button.review-dismiss"
+        ],
+        "severity": "medium",
+        "source_binding_status": "verified",
+        "source_references": [
+          {
+            "lines": "1-3",
+            "path": "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx",
+            "reason": "selector/token 'review-dismiss' matched view.tsx:1",
+            "relative_path": "view.tsx",
+            "selector": "review-dismiss"
+          }
+        ],
+        "style_files": [],
+        "supporting_files": [],
+        "target_refs": [
+          "button.review-dismiss"
+        ],
+        "title": "The referenced UI element is not centered.",
+        "type": "layout"
+      }
+    ],
+    "non_goals": [
+      "Do not create ISS notes in the review-processing pipeline.",
+      "Do not implement fixes in the review-processing pipeline.",
+      "Do not infer a redesign beyond what the reviewer actually said."
+    ],
+    "open_questions": [],
+    "verification_notes": []
+  },
+  "negative_evidence": {
+    "discarded_events": [],
+    "filtered_points": [],
+    "silent_annotations": []
+  },
+  "quality": {
+    "feedback_item_count": 1,
+    "must_fix_before_delegation": [],
+    "status": "review_packet_ready",
+    "target_candidate_count": 1,
+    "warnings": []
+  },
+  "review": {
+    "duration_ms": 1000,
+    "review_id": "review_12345678",
+    "review_id_short": "review_1",
+    "reviewed_at": "2026-01-01T00:00:00Z",
+    "subject_id": "http://fixture.test",
+    "submitted_by": "root-submitted_by"
+  },
+  "schema_version": 2,
+  "segments": [
+    {
+      "end_ms": 500,
+      "id": "seg_001",
+      "nearby_event_ids": [
+        1
+      ],
+      "nearby_stroke_ids": [],
+      "nearby_target_refs": [
+        "button.review-dismiss"
+      ],
+      "start_ms": 0,
+      "text": "This button is not centered.",
+      "word_count": 5
+    }
+  ],
+  "source_bindings": [
+    {
+      "caveats": [],
+      "component": "button.review-dismiss",
+      "confidence": "high",
+      "feedback_item_id": "fb_001",
+      "files_to_inspect_first": [
+        "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+      ],
+      "likely_cause": null,
+      "open_questions": [],
+      "primary_files": [
+        "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+      ],
+      "reason": "source binding verified from local codebase references",
+      "recommended_first_file": "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx",
+      "references": [
+        {
+          "lines": "1-3",
+          "path": "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx",
+          "reason": "selector/token 'review-dismiss' matched view.tsx:1",
+          "relative_path": "view.tsx",
+          "selector": "review-dismiss"
+        }
+      ],
+      "selectors": [
+        "button.review-dismiss"
+      ],
+      "status": "verified",
+      "style_files": [],
+      "subject_id": "http://fixture.test",
+      "supporting_files": [],
+      "target_refs": [
+        "button.review-dismiss"
+      ]
+    }
+  ],
+  "transcript": {
+    "audio_offset_ms": 0,
+    "text": "This button is not centered.",
+    "words": [
+      {
+        "end_ms": 100,
+        "start_ms": 0,
+        "text": "This"
+      },
+      {
+        "end_ms": 200,
+        "start_ms": 100,
+        "text": "button"
+      },
+      {
+        "end_ms": 300,
+        "start_ms": 200,
+        "text": "is"
+      },
+      {
+        "end_ms": 400,
+        "start_ms": 300,
+        "text": "not"
+      },
+      {
+        "end_ms": 500,
+        "start_ms": 400,
+        "text": "centered."
+      }
+    ]
+  }
+}

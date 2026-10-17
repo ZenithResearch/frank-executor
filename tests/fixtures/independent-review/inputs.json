@@ -1,0 +1,55 @@
+{
+  "schema": "review.independent-inputs.v1",
+  "review_id": "review_12345678",
+  "reviewed_at": "2026-01-01T00:00:00Z",
+  "submitted_by": "root-submitted_by",
+  "subject_id": "http://fixture.test",
+  "duration_ms": 1000,
+  "audio_utf8": "audio",
+  "events": [
+    {
+      "id": 1,
+      "type": "click",
+      "target": "button.review-dismiss",
+      "elapsedMs": 200,
+      "x": 10,
+      "y": 10
+    }
+  ],
+  "stt_response": {
+    "transcript": "This button is not centered.",
+    "audio_offset_ms": 0,
+    "words": [
+      {
+        "text": "This",
+        "start": 0.0,
+        "end": 0.1
+      },
+      {
+        "text": "button",
+        "start": 0.1,
+        "end": 0.2
+      },
+      {
+        "text": "is",
+        "start": 0.2,
+        "end": 0.30000000000000004
+      },
+      {
+        "text": "not",
+        "start": 0.30000000000000004,
+        "end": 0.4
+      },
+      {
+        "text": "centered.",
+        "start": 0.4,
+        "end": 0.5
+      }
+    ]
+  },
+  "source_snapshot": {
+    "http://fixture.test": {
+      "view.tsx": "<button className=\"review-dismiss\" />"
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "expected": {
+    "compilation_hash": "f0fff8e5f98ab2132632b1f810af130d6a0c2b8ad29e08d4d3bab769539ce711",
+    "process_id": "development-sop-v1",
+    "root_inputs": {
+      "change_request": "Make add(a, b) return a + b.",
+      "repository_snapshot": {
+        "byte_length": 48,
+        "content_hash": "3687fa86b71a4a47deb2fa8879ed49af6cbb6a65b943125173356479a62dd128",
+        "media_type": "application/json"
+      }
+    },
+    "run_state": "succeeded",
+    "runnable_batches": [
+      [
+        "scope"
+      ],
+      [
+        "implement"
+      ],
+      [
+        "contract-tests",
+        "unit-tests"
+      ],
+      [
+        "review"
+      ],
+      [
+        "package"
+      ],
+      []
+    ],
+    "step_states": {
+      "contract-tests": "succeeded",
+      "implement": "succeeded",
+      "package": "succeeded",
+      "review": "succeeded",
+      "scope": "succeeded",
+      "unit-tests": "succeeded"
+    },
+    "steps": {
+      "contract-tests": {
+        "outcome": "succeeded",
+        "outputs": {
+          "passed": true,
+          "report": {
+            "byte_length": 82,
+            "content_hash": "ecada1718dd3b50002e3232608033ae429a671643b2b888d75c23d0af588e3a7",
+            "media_type": "application/json"
+          }
+        }
+      },
+      "implement": {
+        "outcome": "succeeded",
+        "outputs": {
+          "patch": {
+            "byte_length": 109,
+            "content_hash": "0d14637a4cb0b87112929fe05b65c60e052cac98cf4852fc2c572442d178a043",
+            "media_type": "application/json"
+          }
+        }
+      },
+      "package": {
+        "outcome": "succeeded",
+        "outputs": {
+          "bundle": {
+            "byte_length": 316,
+            "content_hash": "46ff63870ee4e6509aefbc86868d3e29f7803b9e69a1b859249c165ebae65efe",
+            "media_type": "application/json"
+          }
+        }
+      },
+      "review": {
+        "outcome": "succeeded",
+        "outputs": {
+          "approved": true,
+          "review": {
+            "byte_length": 380,
+            "content_hash": "d6b0fba76cd0c5bce626066bd6b2ec3a65d74481295c89eefd42bed0e6a812e0",
+            "media_type": "application/json"
+          }
+        }
+      },
+      "scope": {
+        "outcome": "succeeded",
+        "outputs": {
+          "plan": {
+            "byte_length": 317,
+            "content_hash": "96af0341a06704e027ce39cdb5a2f51698d187bfc10e3bb5f86daf1d25f8d1cd",
+            "media_type": "application/json"
+          }
+        }
+      },
+      "unit-tests": {
+        "outcome": "succeeded",
+        "outputs": {
+          "passed": true,
+          "report": {
+            "byte_length": 186,
+            "content_hash": "0c5024300264b1b33bd2491c9e4c56fb8cfcd700c40bdf0eb1d1673fa4e72fe5",
+            "media_type": "application/json"
+          }
+        }
+      }
+    }
+  },
+  "provenance": {
+    "basis": "Separately authored fixed input, explicit sums, signature and artifact schemas; static jq data authoring, no candidate handler run.",
+    "resource_sha256": "05449a8f1757b630cf08121b0849fb3c056932713218f0043747f3eaa62d078d",
+    "semantic_approval": "pending root and independent review; does not approve 62 personal-review divergences"
+  },
+  "schema": "review.computed-expectation.v1"
+}

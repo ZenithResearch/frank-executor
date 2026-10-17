@@ -1,0 +1,540 @@
+{
+  "schema": "review.independent-comparison-golden.v1",
+  "source_report_sha256": "61b91dc6679e808538fda9dba25067f5cb67c875eba3c027c229190ed5542e15",
+  "scenarios": [
+    {
+      "scenario": "source-available",
+      "legacy_state": "completed",
+      "legacy_status_writeback": "processed",
+      "retained_replay_fixture": {
+        "artifacts": {
+          "step_1-audio": {
+            "content_utf8": "audio",
+            "media_type": "text/plain"
+          },
+          "step_1-events": {
+            "content_utf8": "[{\"id\":1,\"type\":\"click\",\"target\":\"button.review-dismiss\",\"elapsedMs\":200,\"x\":10,\"y\":10}]",
+            "media_type": "application/json"
+          },
+          "step_1-raw-outputs": {
+            "content_utf8": "{\"audio_asset_path\":\"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/assets/review_1/audio_audio_1.webm\",\"events\":[{\"elapsedMs\":200,\"id\":1,\"target\":\"button.review-dismiss\",\"type\":\"click\",\"x\":10,\"y\":10}],\"review_id_short\":\"review_1\"}",
+            "media_type": "application/json"
+          },
+          "step_2-raw-outputs": {
+            "content_utf8": "{\"audio_offset_ms\":0,\"transcript\":\"This button is not centered.\",\"words\":[{\"end_ms\":100,\"start_ms\":0,\"text\":\"This\"},{\"end_ms\":200,\"start_ms\":100,\"text\":\"button\"},{\"end_ms\":300,\"start_ms\":200,\"text\":\"is\"},{\"end_ms\":400,\"start_ms\":300,\"text\":\"not\"},{\"end_ms\":500,\"start_ms\":400,\"text\":\"centered.\"}]}",
+            "media_type": "application/json"
+          },
+          "step_3-raw-outputs": {
+            "content_utf8": "{\"component_names\":[{\"aliases\":[],\"component\":\"button.review-dismiss\",\"event_count\":1,\"event_ids\":[1],\"resolution_status\":\"candidate\",\"selectors\":[\"button.review-dismiss\"],\"source\":\"event.target\",\"spatial_hint\":{\"x\":10,\"y\":10}}]}",
+            "media_type": "application/json"
+          },
+          "step_4-raw-outputs": {
+            "content_utf8": "{\"resolved_transcript\":\"This button is not centered.\",\"transcript_note_path\":\"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/transcript_review_1.md\"}",
+            "media_type": "application/json"
+          },
+          "step_4-transcript": {
+            "content_utf8": "This button is not centered.",
+            "media_type": "text/markdown"
+          },
+          "step_5-packet": {
+            "content_utf8": "{\n  \"actionability\": {\n    \"actionable_now\": [],\n    \"design_preference\": [\n      {\n        \"confidence\": 0.72,\n        \"feedback_item_id\": \"fb_001\",\n        \"reason\": \"feedback is plausible but source binding is not verified\",\n        \"source_binding_status\": \"missing\",\n        \"target_refs\": [\n          \"button.review-dismiss\"\n        ],\n        \"type\": \"layout\"\n      }\n    ],\n    \"discarded_or_filtered\": [],\n    \"needs_human_clarification\": [],\n    \"non_issue\": []\n  },\n  \"artifacts\": {\n    \"audio_asset_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/assets/review_1/audio_audio_1.webm\",\n    \"case_dir\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad\",\n    \"events_asset_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/assets/review_1/events_events_1.json\",\n    \"review_note_path\": null,\n    \"review_packet_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/review_packet.json\",\n    \"transcript_note_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/transcript_review_1.md\"\n  },\n  \"events\": {\n    \"count\": 1,\n    \"page_events\": [],\n    \"pointer_windows\": [\n      {\n        \"end_ms\": 200,\n        \"event_ids\": [\n          1\n        ],\n        \"id\": \"ptr_001\",\n        \"start_ms\": 200,\n        \"target_refs\": [\n          \"button.review-dismiss\"\n        ]\n      }\n    ],\n    \"scroll_events\": [],\n    \"stroke_groups\": [],\n    \"target_candidates\": [\n      {\n        \"aliases\": [],\n        \"component\": \"button.review-dismiss\",\n        \"event_count\": 1,\n        \"event_ids\": [\n          1\n        ],\n        \"first_elapsed_ms\": 200,\n        \"last_elapsed_ms\": 200,\n        \"resolution_status\": \"candidate\",\n        \"selectors\": [\n          \"button.review-dismiss\"\n        ],\n        \"source\": \"event.target\",\n        \"spatial_hint\": {\n          \"x\": 10,\n          \"y\": 10\n        },\n        \"target_ref\": \"button.review-dismiss\"\n      }\n    ],\n    \"target_events\": [\n      {\n        \"elapsed_ms\": 200,\n        \"event_id\": 1,\n        \"source\": \"event.target\",\n        \"target_ref\": \"button.review-dismiss\",\n        \"type\": \"click\",\n        \"x\": 10,\n        \"y\": 10\n      }\n    ],\n    \"type_counts\": {\n      \"click\": 1\n    }\n  },\n  \"feedback_items\": [\n    {\n      \"confidence\": 0.72,\n      \"evidence\": {\n        \"event_ids\": [\n          1\n        ],\n        \"stroke_ids\": [],\n        \"transcript_segment_ids\": [\n          \"seg_001\"\n        ]\n      },\n      \"id\": \"fb_001\",\n      \"normalized_claim\": \"The referenced UI element is not centered.\",\n      \"reviewer_quote\": \"This button is not centered.\",\n      \"severity\": \"medium\",\n      \"target_refs\": [\n        \"button.review-dismiss\"\n      ],\n      \"type\": \"layout\"\n    }\n  ],\n  \"implementation_handoff\": {\n    \"files_to_inspect_first\": [],\n    \"implementation_tasks\": [\n      {\n        \"acceptance_checks\": [\n          \"Verify the reviewed UI no longer exhibits: The referenced UI element is not centered.\",\n          \"Verify the change is limited to the reviewed surface unless the codebase requires shared component changes.\",\n          \"Verify no unrelated redesign or issue-note creation was introduced.\"\n        ],\n        \"confidence\": 0.72,\n        \"constraints\": [\n          \"Preserve reviewer voice and direct evidence.\",\n          \"Do not invent acceptance criteria beyond the reviewer's stated feedback.\",\n          \"Preserve existing UX unless the reviewer explicitly criticized it.\"\n        ],\n        \"do_not_do\": [\n          \"Do not create ISS notes from this pipeline output.\",\n          \"Do not treat silent gestures as feedback without matching speech.\",\n          \"Do not infer unstated redesign requirements.\"\n        ],\n        \"evidence\": {\n          \"event_ids\": [\n            1\n          ],\n          \"quote\": \"This button is not centered.\",\n          \"stroke_ids\": [],\n          \"transcript_segment_ids\": [\n            \"seg_001\"\n          ]\n        },\n        \"feedback_item_id\": \"fb_001\",\n        \"files_to_inspect_first\": [],\n        \"open_questions\": [],\n        \"primary_files\": [],\n        \"problem\": \"The referenced UI element is not centered.\",\n        \"recommended_first_file\": null,\n        \"reviewer_quote\": \"This button is not centered.\",\n        \"selectors\": [\n          \"button.review-dismiss\"\n        ],\n        \"severity\": \"medium\",\n        \"source_binding_status\": \"missing\",\n        \"source_references\": [],\n        \"style_files\": [],\n        \"supporting_files\": [],\n        \"target_refs\": [\n          \"button.review-dismiss\"\n        ],\n        \"title\": \"The referenced UI element is not centered.\",\n        \"type\": \"layout\"\n      }\n    ],\n    \"non_goals\": [\n      \"Do not create ISS notes in the review-processing pipeline.\",\n      \"Do not implement fixes in the review-processing pipeline.\",\n      \"Do not infer a redesign beyond what the reviewer actually said.\"\n    ],\n    \"open_questions\": [],\n    \"verification_notes\": [\n      \"fb_001: source binding missing; inspect before implementation.\"\n    ]\n  },\n  \"negative_evidence\": {\n    \"discarded_events\": [],\n    \"filtered_points\": [],\n    \"silent_annotations\": []\n  },\n  \"quality\": {\n    \"feedback_item_count\": 1,\n    \"must_fix_before_delegation\": [\n      \"source binding missing or deferred for: fb_001\"\n    ],\n    \"status\": \"needs_source_binding\",\n    \"target_candidate_count\": 1,\n    \"warnings\": []\n  },\n  \"review\": {\n    \"duration_ms\": 1000,\n    \"review_id\": \"review_12345678\",\n    \"review_id_short\": \"review_1\",\n    \"reviewed_at\": \"2026-01-01T00:00:00Z\",\n    \"subject_id\": \"http://fixture.test\",\n    \"submitted_by\": \"root-submitted_by\"\n  },\n  \"schema_version\": 2,\n  \"segments\": [\n    {\n      \"end_ms\": 500,\n      \"id\": \"seg_001\",\n      \"nearby_event_ids\": [\n        1\n      ],\n      \"nearby_stroke_ids\": [],\n      \"nearby_target_refs\": [\n        \"button.review-dismiss\"\n      ],\n      \"start_ms\": 0,\n      \"text\": \"This button is not centered.\",\n      \"word_count\": 5\n    }\n  ],\n  \"source_bindings\": [],\n  \"transcript\": {\n    \"audio_offset_ms\": 0,\n    \"text\": \"This button is not centered.\",\n    \"words\": [\n      {\n        \"end_ms\": 100,\n        \"start_ms\": 0,\n        \"text\": \"This\"\n      },\n      {\n        \"end_ms\": 200,\n        \"start_ms\": 100,\n        \"text\": \"button\"\n      },\n      {\n        \"end_ms\": 300,\n        \"start_ms\": 200,\n        \"text\": \"is\"\n      },\n      {\n        \"end_ms\": 400,\n        \"start_ms\": 300,\n        \"text\": \"not\"\n      },\n      {\n        \"end_ms\": 500,\n        \"start_ms\": 400,\n        \"text\": \"centered.\"\n      }\n    ]\n  }\n}",
+            "media_type": "application/json"
+          },
+          "step_5-raw-outputs": {
+            "content_utf8": "{\"actionability\":{\"actionable_now\":[],\"design_preference\":[{\"confidence\":0.72,\"feedback_item_id\":\"fb_001\",\"reason\":\"feedback is plausible but source binding is not verified\",\"source_binding_status\":\"missing\",\"target_refs\":[\"button.review-dismiss\"],\"type\":\"layout\"}],\"discarded_or_filtered\":[],\"needs_human_clarification\":[],\"non_issue\":[]},\"filtered_points\":[],\"implementation_handoff\":{\"files_to_inspect_first\":[],\"implementation_tasks\":[{\"acceptance_checks\":[\"Verify the reviewed UI no longer exhibits: The referenced UI element is not centered.\",\"Verify the change is limited to the reviewed surface unless the codebase requires shared component changes.\",\"Verify no unrelated redesign or issue-note creation was introduced.\"],\"confidence\":0.72,\"constraints\":[\"Preserve reviewer voice and direct evidence.\",\"Do not invent acceptance criteria beyond the reviewer's stated feedback.\",\"Preserve existing UX unless the reviewer explicitly criticized it.\"],\"do_not_do\":[\"Do not create ISS notes from this pipeline output.\",\"Do not treat silent gestures as feedback without matching speech.\",\"Do not infer unstated redesign requirements.\"],\"evidence\":{\"event_ids\":[1],\"quote\":\"This button is not centered.\",\"stroke_ids\":[],\"transcript_segment_ids\":[\"seg_001\"]},\"feedback_item_id\":\"fb_001\",\"files_to_inspect_first\":[],\"open_questions\":[],\"primary_files\":[],\"problem\":\"The referenced UI element is not centered.\",\"recommended_first_file\":null,\"reviewer_quote\":\"This button is not centered.\",\"selectors\":[\"button.review-dismiss\"],\"severity\":\"medium\",\"source_binding_status\":\"missing\",\"source_references\":[],\"style_files\":[],\"supporting_files\":[],\"target_refs\":[\"button.review-dismiss\"],\"title\":\"The referenced UI element is not centered.\",\"type\":\"layout\"}],\"non_goals\":[\"Do not create ISS notes in the review-processing pipeline.\",\"Do not implement fixes in the review-processing pipeline.\",\"Do not infer a redesign beyond what the reviewer actually said.\"],\"open_questions\":[],\"verification_notes\":[\"fb_001: source binding missing; inspect before implementation.\"]},\"negative_evidence\":{\"discarded_events\":[],\"filtered_points\":[],\"silent_annotations\":[]},\"observations\":[{\"confidence\":0.72,\"evidence\":{\"event_ids\":[1],\"stroke_ids\":[],\"transcript_segment_ids\":[\"seg_001\"]},\"id\":\"fb_001\",\"normalized_claim\":\"The referenced UI element is not centered.\",\"reviewer_quote\":\"This button is not centered.\",\"severity\":\"medium\",\"target_refs\":[\"button.review-dismiss\"],\"type\":\"layout\"}],\"review_packet_path\":\"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/review_packet.json\",\"review_packet_status\":\"needs_source_binding\",\"silent_annotations\":[],\"target_events\":[{\"elapsed_ms\":200,\"event_id\":1,\"source\":\"event.target\",\"target_ref\":\"button.review-dismiss\",\"type\":\"click\",\"x\":10,\"y\":10}]}",
+            "media_type": "application/json"
+          },
+          "step_6-raw-outputs": {
+            "content_utf8": "{\"codebase_context\":[{\"caveats\":[],\"component\":\"button.review-dismiss\",\"confidence\":\"high\",\"feedback_item_id\":\"fb_001\",\"files_to_inspect_first\":[\"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\"],\"likely_cause\":null,\"open_questions\":[],\"primary_files\":[\"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\"],\"reason\":\"source binding verified from local codebase references\",\"recommended_first_file\":\"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\",\"references\":[{\"lines\":\"1-3\",\"path\":\"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\",\"reason\":\"selector/token 'review-dismiss' matched view.tsx:1\",\"relative_path\":\"view.tsx\",\"selector\":\"review-dismiss\"}],\"selectors\":[\"button.review-dismiss\"],\"status\":\"verified\",\"style_files\":[],\"subject_id\":\"http://fixture.test\",\"supporting_files\":[],\"target_refs\":[\"button.review-dismiss\"]}]}",
+            "media_type": "application/json"
+          },
+          "step_7-final-packet": {
+            "content_utf8": "{\n  \"actionability\": {\n    \"actionable_now\": [\n      {\n        \"confidence\": 0.72,\n        \"feedback_item_id\": \"fb_001\",\n        \"reason\": \"feedback has target evidence and verified source binding\",\n        \"source_binding_status\": \"verified\",\n        \"target_refs\": [\n          \"button.review-dismiss\"\n        ],\n        \"type\": \"layout\"\n      }\n    ],\n    \"design_preference\": [],\n    \"discarded_or_filtered\": [],\n    \"needs_human_clarification\": [],\n    \"non_issue\": []\n  },\n  \"artifacts\": {\n    \"audio_asset_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/assets/review_1/audio_audio_1.webm\",\n    \"case_dir\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad\",\n    \"events_asset_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/assets/review_1/events_events_1.json\",\n    \"review_note_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/review_review_1.md\",\n    \"review_packet_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/review_packet.json\",\n    \"transcript_note_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/transcript_review_1.md\"\n  },\n  \"events\": {\n    \"count\": 1,\n    \"page_events\": [],\n    \"pointer_windows\": [\n      {\n        \"end_ms\": 200,\n        \"event_ids\": [\n          1\n        ],\n        \"id\": \"ptr_001\",\n        \"start_ms\": 200,\n        \"target_refs\": [\n          \"button.review-dismiss\"\n        ]\n      }\n    ],\n    \"scroll_events\": [],\n    \"stroke_groups\": [],\n    \"target_candidates\": [\n      {\n        \"aliases\": [],\n        \"component\": \"button.review-dismiss\",\n        \"event_count\": 1,\n        \"event_ids\": [\n          1\n        ],\n        \"first_elapsed_ms\": 200,\n        \"last_elapsed_ms\": 200,\n        \"resolution_status\": \"candidate\",\n        \"selectors\": [\n          \"button.review-dismiss\"\n        ],\n        \"source\": \"event.target\",\n        \"spatial_hint\": {\n          \"x\": 10,\n          \"y\": 10\n        },\n        \"target_ref\": \"button.review-dismiss\"\n      }\n    ],\n    \"target_events\": [\n      {\n        \"elapsed_ms\": 200,\n        \"event_id\": 1,\n        \"source\": \"event.target\",\n        \"target_ref\": \"button.review-dismiss\",\n        \"type\": \"click\",\n        \"x\": 10,\n        \"y\": 10\n      }\n    ],\n    \"type_counts\": {\n      \"click\": 1\n    }\n  },\n  \"feedback_items\": [\n    {\n      \"confidence\": 0.72,\n      \"evidence\": {\n        \"event_ids\": [\n          1\n        ],\n        \"stroke_ids\": [],\n        \"transcript_segment_ids\": [\n          \"seg_001\"\n        ]\n      },\n      \"id\": \"fb_001\",\n      \"normalized_claim\": \"The referenced UI element is not centered.\",\n      \"reviewer_quote\": \"This button is not centered.\",\n      \"severity\": \"medium\",\n      \"target_refs\": [\n        \"button.review-dismiss\"\n      ],\n      \"type\": \"layout\"\n    }\n  ],\n  \"implementation_handoff\": {\n    \"files_to_inspect_first\": [\n      \"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\"\n    ],\n    \"implementation_tasks\": [\n      {\n        \"acceptance_checks\": [\n          \"Verify the reviewed UI no longer exhibits: The referenced UI element is not centered.\",\n          \"Verify the change is limited to the reviewed surface unless the codebase requires shared component changes.\",\n          \"Verify no unrelated redesign or issue-note creation was introduced.\"\n        ],\n        \"confidence\": 0.72,\n        \"constraints\": [\n          \"Preserve reviewer voice and direct evidence.\",\n          \"Do not invent acceptance criteria beyond the reviewer's stated feedback.\",\n          \"Preserve existing UX unless the reviewer explicitly criticized it.\"\n        ],\n        \"do_not_do\": [\n          \"Do not create ISS notes from this pipeline output.\",\n          \"Do not treat silent gestures as feedback without matching speech.\",\n          \"Do not infer unstated redesign requirements.\"\n        ],\n        \"evidence\": {\n          \"event_ids\": [\n            1\n          ],\n          \"quote\": \"This button is not centered.\",\n          \"stroke_ids\": [],\n          \"transcript_segment_ids\": [\n            \"seg_001\"\n          ]\n        },\n        \"feedback_item_id\": \"fb_001\",\n        \"files_to_inspect_first\": [\n          \"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\"\n        ],\n        \"open_questions\": [],\n        \"primary_files\": [\n          \"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\"\n        ],\n        \"problem\": \"The referenced UI element is not centered.\",\n        \"recommended_first_file\": \"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\",\n        \"reviewer_quote\": \"This button is not centered.\",\n        \"selectors\": [\n          \"button.review-dismiss\"\n        ],\n        \"severity\": \"medium\",\n        \"source_binding_status\": \"verified\",\n        \"source_references\": [\n          {\n            \"lines\": \"1-3\",\n            \"path\": \"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\",\n            \"reason\": \"selector/token 'review-dismiss' matched view.tsx:1\",\n            \"relative_path\": \"view.tsx\",\n            \"selector\": \"review-dismiss\"\n          }\n        ],\n        \"style_files\": [],\n        \"supporting_files\": [],\n        \"target_refs\": [\n          \"button.review-dismiss\"\n        ],\n        \"title\": \"The referenced UI element is not centered.\",\n        \"type\": \"layout\"\n      }\n    ],\n    \"non_goals\": [\n      \"Do not create ISS notes in the review-processing pipeline.\",\n      \"Do not implement fixes in the review-processing pipeline.\",\n      \"Do not infer a redesign beyond what the reviewer actually said.\"\n    ],\n    \"open_questions\": [],\n    \"verification_notes\": []\n  },\n  \"negative_evidence\": {\n    \"discarded_events\": [],\n    \"filtered_points\": [],\n    \"silent_annotations\": []\n  },\n  \"quality\": {\n    \"feedback_item_count\": 1,\n    \"must_fix_before_delegation\": [],\n    \"status\": \"review_packet_ready\",\n    \"target_candidate_count\": 1,\n    \"warnings\": []\n  },\n  \"review\": {\n    \"duration_ms\": 1000,\n    \"review_id\": \"review_12345678\",\n    \"review_id_short\": \"review_1\",\n    \"reviewed_at\": \"2026-01-01T00:00:00Z\",\n    \"subject_id\": \"http://fixture.test\",\n    \"submitted_by\": \"root-submitted_by\"\n  },\n  \"schema_version\": 2,\n  \"segments\": [\n    {\n      \"end_ms\": 500,\n      \"id\": \"seg_001\",\n      \"nearby_event_ids\": [\n        1\n      ],\n      \"nearby_stroke_ids\": [],\n      \"nearby_target_refs\": [\n        \"button.review-dismiss\"\n      ],\n      \"start_ms\": 0,\n      \"text\": \"This button is not centered.\",\n      \"word_count\": 5\n    }\n  ],\n  \"source_bindings\": [\n    {\n      \"caveats\": [],\n      \"component\": \"button.review-dismiss\",\n      \"confidence\": \"high\",\n      \"feedback_item_id\": \"fb_001\",\n      \"files_to_inspect_first\": [\n        \"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\"\n      ],\n      \"likely_cause\": null,\n      \"open_questions\": [],\n      \"primary_files\": [\n        \"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\"\n      ],\n      \"reason\": \"source binding verified from local codebase references\",\n      \"recommended_first_file\": \"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\",\n      \"references\": [\n        {\n          \"lines\": \"1-3\",\n          \"path\": \"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\",\n          \"reason\": \"selector/token 'review-dismiss' matched view.tsx:1\",\n          \"relative_path\": \"view.tsx\",\n          \"selector\": \"review-dismiss\"\n        }\n      ],\n      \"selectors\": [\n        \"button.review-dismiss\"\n      ],\n      \"status\": \"verified\",\n      \"style_files\": [],\n      \"subject_id\": \"http://fixture.test\",\n      \"supporting_files\": [],\n      \"target_refs\": [\n        \"button.review-dismiss\"\n      ]\n    }\n  ],\n  \"transcript\": {\n    \"audio_offset_ms\": 0,\n    \"text\": \"This button is not centered.\",\n    \"words\": [\n      {\n        \"end_ms\": 100,\n        \"start_ms\": 0,\n        \"text\": \"This\"\n      },\n      {\n        \"end_ms\": 200,\n        \"start_ms\": 100,\n        \"text\": \"button\"\n      },\n      {\n        \"end_ms\": 300,\n        \"start_ms\": 200,\n        \"text\": \"is\"\n      },\n      {\n        \"end_ms\": 400,\n        \"start_ms\": 300,\n        \"text\": \"not\"\n      },\n      {\n        \"end_ms\": 500,\n        \"start_ms\": 400,\n        \"text\": \"centered.\"\n      }\n    ]\n  }\n}",
+            "media_type": "application/json"
+          },
+          "step_7-raw-outputs": {
+            "content_utf8": "{\"review_note_path\":\"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/review_review_1.md\"}",
+            "media_type": "application/json"
+          },
+          "step_7-review": {
+            "content_utf8": "# Review review_1\n\n## Packet Status\n\nStatus: `review_packet_ready`\nFeedback items: `1`\nMust fix before delegation: []\n\n## Implementation Handoff\n\n### Task 1: The referenced UI element is not centered.\n\nProblem: The referenced UI element is not centered.\nReviewer quote: \"This button is not centered.\"\nTargets: `button.review-dismiss`\nSource binding: `verified`\nEvidence: segments=['seg_001'], events=[1], strokes=[]\nFiles to inspect first: ['/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx']\nOpen questions: []\nAcceptance checks:\n- Verify the reviewed UI no longer exhibits: The referenced UI element is not centered.\n- Verify the change is limited to the reviewed surface unless the codebase requires shared component changes.\n- Verify no unrelated redesign or issue-note creation was introduced.\nDo not do:\n- Do not create ISS notes from this pipeline output.\n- Do not treat silent gestures as feedback without matching speech.\n- Do not infer unstated redesign requirements.\n\n## Source Binding\n\n- `fb_001` \u2192 `verified` \u2014 source binding verified from local codebase references\n\n## Non-goals\n\n- Do not create ISS notes in the review-processing pipeline.\n- Do not implement fixes in the review-processing pipeline.\n- Do not infer a redesign beyond what the reviewer actually said.\n\n## Feedback Items\n\n### 1. The referenced UI element is not centered.\n\nReviewer quote: \"This button is not centered.\"\nType: `layout` \u00b7 Confidence: `0.72` \u00b7 Severity: `medium`\nTargets: `button.review-dismiss`\nEvidence: segments=['seg_001'], events=[1]\n\n## What the reviewer said\n\nThis button is not centered.\n",
+            "media_type": "text/markdown"
+          },
+          "step_8-raw-outputs": {
+            "content_utf8": "{\"review_status_updated\":{\"automaton_event\":\"review_passed\",\"automaton_status\":\"succeeded\",\"reason\":\"review_passed\",\"review_id\":\"review_12345678\",\"review_note_path\":\"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/review_review_1.md\",\"review_packet_path\":\"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/case_6826ce168f324a8c8f513faa91558b0f/attempts/case_run_eff9aefac1594d6482fa59fbef71faad/artifacts/review_packet.json\",\"review_packet_status\":\"review_packet_ready\",\"review_scope\":\"full_output_against_objective_process_prompt_acceptance_criteria\",\"status\":\"processed\"}}",
+            "media_type": "application/json"
+          },
+          "step_9-raw-outputs": {
+            "content_utf8": "{}",
+            "media_type": "application/json"
+          }
+        },
+        "inputs": {
+          "audio_asset": {
+            "$artifact": "step_1-audio"
+          },
+          "duration_ms": 1000,
+          "events_asset": {
+            "$artifact": "step_1-events"
+          },
+          "review_id": "review_12345678",
+          "reviewed_at": "2026-01-01T00:00:00Z",
+          "subject_id": "http://fixture.test",
+          "submitted_by": "root-submitted_by"
+        },
+        "scenario_id": "legacy-completed",
+        "schema": "runtime.shadow-fixture.v1",
+        "steps": {
+          "step_1": {
+            "outcome": "succeeded",
+            "outputs": {
+              "audio_asset": {
+                "$artifact": "step_1-audio"
+              },
+              "events": [
+                {
+                  "end_ms": 200,
+                  "event_index": 0,
+                  "kind": "click",
+                  "start_ms": 200,
+                  "target": "button.review-dismiss"
+                }
+              ],
+              "review_id_short": "review_1"
+            }
+          },
+          "step_2": {
+            "outcome": "succeeded",
+            "outputs": {
+              "audio_offset_ms": 0,
+              "transcript": "This button is not centered.",
+              "words": [
+                {
+                  "end_ms": 100,
+                  "start_ms": 0,
+                  "text": "This"
+                },
+                {
+                  "end_ms": 200,
+                  "start_ms": 100,
+                  "text": "button"
+                },
+                {
+                  "end_ms": 300,
+                  "start_ms": 200,
+                  "text": "is"
+                },
+                {
+                  "end_ms": 400,
+                  "start_ms": 300,
+                  "text": "not"
+                },
+                {
+                  "end_ms": 500,
+                  "start_ms": 400,
+                  "text": "centered."
+                }
+              ]
+            }
+          },
+          "step_3": {
+            "outcome": "succeeded",
+            "outputs": {
+              "component_names": [
+                {
+                  "aliases": [],
+                  "component": "button.review-dismiss",
+                  "resolution_status": "candidate",
+                  "selectors": [
+                    "button.review-dismiss"
+                  ],
+                  "source": "event.target",
+                  "spatial_hint": "{\"x\":10,\"y\":10}"
+                }
+              ]
+            }
+          },
+          "step_4": {
+            "outcome": "succeeded",
+            "outputs": {
+              "resolved_transcript": "This button is not centered.",
+              "transcript_note": {
+                "$artifact": "step_4-transcript"
+              }
+            }
+          },
+          "step_5": {
+            "outcome": "succeeded",
+            "outputs": {
+              "actionability": {
+                "actionable_now": [],
+                "design_preference": [
+                  "{\"confidence\":0.72,\"feedback_item_id\":\"fb_001\",\"reason\":\"feedback is plausible but source binding is not verified\",\"source_binding_status\":\"missing\",\"target_refs\":[\"button.review-dismiss\"],\"type\":\"layout\"}"
+                ],
+                "discarded_or_filtered": [],
+                "needs_human_clarification": [],
+                "non_issue": []
+              },
+              "filtered_points": [],
+              "implementation_handoff": {
+                "files_to_inspect_first": [],
+                "implementation_tasks": [
+                  "{\"acceptance_checks\":[\"Verify the reviewed UI no longer exhibits: The referenced UI element is not centered.\",\"Verify the change is limited to the reviewed surface unless the codebase requires shared component changes.\",\"Verify no unrelated redesign or issue-note creation was introduced.\"],\"confidence\":0.72,\"constraints\":[\"Preserve reviewer voice and direct evidence.\",\"Do not invent acceptance criteria beyond the reviewer's stated feedback.\",\"Preserve existing UX unless the reviewer explicitly criticized it.\"],\"do_not_do\":[\"Do not create ISS notes from this pipeline output.\",\"Do not treat silent gestures as feedback without matching speech.\",\"Do not infer unstated redesign requirements.\"],\"evidence\":{\"event_ids\":[1],\"quote\":\"This button is not centered.\",\"stroke_ids\":[],\"transcript_segment_ids\":[\"seg_001\"]},\"feedback_item_id\":\"fb_001\",\"files_to_inspect_first\":[],\"open_questions\":[],\"primary_files\":[],\"problem\":\"The referenced UI element is not centered.\",\"recommended_first_file\":null,\"reviewer_quote\":\"This button is not centered.\",\"selectors\":[\"button.review-dismiss\"],\"severity\":\"medium\",\"source_binding_status\":\"missing\",\"source_references\":[],\"style_files\":[],\"supporting_files\":[],\"target_refs\":[\"button.review-dismiss\"],\"title\":\"The referenced UI element is not centered.\",\"type\":\"layout\"}"
+                ],
+                "non_goals": [
+                  "Do not create ISS notes in the review-processing pipeline.",
+                  "Do not implement fixes in the review-processing pipeline.",
+                  "Do not infer a redesign beyond what the reviewer actually said."
+                ],
+                "open_questions": [],
+                "verification_notes": [
+                  "fb_001: source binding missing; inspect before implementation."
+                ]
+              },
+              "negative_evidence": {
+                "discarded_events": [],
+                "filtered_points": [],
+                "silent_annotations": []
+              },
+              "observations": [
+                {
+                  "component": "button.review-dismiss",
+                  "evidence": "{\"event_ids\":[1],\"stroke_ids\":[],\"transcript_segment_ids\":[\"seg_001\"]}",
+                  "issue": "The referenced UI element is not centered.",
+                  "match_type": "legacy-normalized-evidence",
+                  "observation_id": "fb_001",
+                  "selectors": [
+                    "button.review-dismiss"
+                  ],
+                  "type": "layout",
+                  "what_they_said": "This button is not centered."
+                }
+              ],
+              "review_packet": {
+                "$artifact": "step_5-packet"
+              },
+              "review_packet_status": "needs_source_binding",
+              "silent_annotations": [],
+              "target_events": [
+                {
+                  "end_ms": 200,
+                  "event_index": 0,
+                  "start_ms": 200,
+                  "target": "button.review-dismiss"
+                }
+              ]
+            }
+          },
+          "step_6": {
+            "outcome": "succeeded",
+            "outputs": {
+              "codebase_context": [
+                {
+                  "caveats": [],
+                  "component": "button.review-dismiss",
+                  "confidence": "high",
+                  "likely_cause": "",
+                  "observation_id": "fb_001",
+                  "reasoning": "source binding verified from local codebase references",
+                  "references": [
+                    "{\"lines\":\"1-3\",\"path\":\"/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx\",\"reason\":\"selector/token 'review-dismiss' matched view.tsx:1\",\"relative_path\":\"view.tsx\",\"selector\":\"review-dismiss\"}"
+                  ],
+                  "resolution_status": "verified"
+                }
+              ]
+            }
+          },
+          "step_7": {
+            "outcome": "succeeded",
+            "outputs": {
+              "review_note": {
+                "$artifact": "step_7-review"
+              },
+              "review_packet": {
+                "$artifact": "step_7-final-packet"
+              },
+              "review_packet_status": "review_packet_ready"
+            }
+          },
+          "step_8": {
+            "outcome": "succeeded",
+            "outputs": {
+              "review_status_updated": {
+                "review_id": "review_12345678",
+                "review_note": {
+                  "$artifact": "step_7-review"
+                },
+                "status": "processed"
+              }
+            }
+          },
+          "step_9": {
+            "outcome": "succeeded",
+            "outputs": {}
+          }
+        }
+      }
+    },
+    {
+      "scenario": "source-unavailable",
+      "legacy_state": "failed",
+      "legacy_status_writeback": "failed",
+      "retained_replay_fixture": {
+        "artifacts": {
+          "step_1-audio": {
+            "content_utf8": "audio",
+            "media_type": "text/plain"
+          },
+          "step_1-events": {
+            "content_utf8": "[{\"id\":1,\"type\":\"click\",\"target\":\"button.review-dismiss\",\"elapsedMs\":200,\"x\":10,\"y\":10}]",
+            "media_type": "application/json"
+          },
+          "step_1-raw-outputs": {
+            "content_utf8": "{\"audio_asset_path\":\"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/assets/review_1/audio_audio_1.webm\",\"events\":[{\"elapsedMs\":200,\"id\":1,\"target\":\"button.review-dismiss\",\"type\":\"click\",\"x\":10,\"y\":10}],\"review_id_short\":\"review_1\"}",
+            "media_type": "application/json"
+          },
+          "step_2-raw-outputs": {
+            "content_utf8": "{\"audio_offset_ms\":0,\"transcript\":\"This button is not centered.\",\"words\":[{\"end_ms\":100,\"start_ms\":0,\"text\":\"This\"},{\"end_ms\":200,\"start_ms\":100,\"text\":\"button\"},{\"end_ms\":300,\"start_ms\":200,\"text\":\"is\"},{\"end_ms\":400,\"start_ms\":300,\"text\":\"not\"},{\"end_ms\":500,\"start_ms\":400,\"text\":\"centered.\"}]}",
+            "media_type": "application/json"
+          },
+          "step_3-raw-outputs": {
+            "content_utf8": "{\"component_names\":[{\"aliases\":[],\"component\":\"button.review-dismiss\",\"event_count\":1,\"event_ids\":[1],\"resolution_status\":\"candidate\",\"selectors\":[\"button.review-dismiss\"],\"source\":\"event.target\",\"spatial_hint\":{\"x\":10,\"y\":10}}]}",
+            "media_type": "application/json"
+          },
+          "step_4-raw-outputs": {
+            "content_utf8": "{\"resolved_transcript\":\"This button is not centered.\",\"transcript_note_path\":\"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/artifacts/transcript_review_1.md\"}",
+            "media_type": "application/json"
+          },
+          "step_4-transcript": {
+            "content_utf8": "This button is not centered.",
+            "media_type": "text/markdown"
+          },
+          "step_5-packet": {
+            "content_utf8": "{\n  \"actionability\": {\n    \"actionable_now\": [],\n    \"design_preference\": [\n      {\n        \"confidence\": 0.72,\n        \"feedback_item_id\": \"fb_001\",\n        \"reason\": \"feedback is plausible but source binding is not verified\",\n        \"source_binding_status\": \"missing\",\n        \"target_refs\": [\n          \"button.review-dismiss\"\n        ],\n        \"type\": \"layout\"\n      }\n    ],\n    \"discarded_or_filtered\": [],\n    \"needs_human_clarification\": [],\n    \"non_issue\": []\n  },\n  \"artifacts\": {\n    \"audio_asset_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/assets/review_1/audio_audio_1.webm\",\n    \"case_dir\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6\",\n    \"events_asset_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/assets/review_1/events_events_1.json\",\n    \"review_note_path\": null,\n    \"review_packet_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/artifacts/review_packet.json\",\n    \"transcript_note_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/artifacts/transcript_review_1.md\"\n  },\n  \"events\": {\n    \"count\": 1,\n    \"page_events\": [],\n    \"pointer_windows\": [\n      {\n        \"end_ms\": 200,\n        \"event_ids\": [\n          1\n        ],\n        \"id\": \"ptr_001\",\n        \"start_ms\": 200,\n        \"target_refs\": [\n          \"button.review-dismiss\"\n        ]\n      }\n    ],\n    \"scroll_events\": [],\n    \"stroke_groups\": [],\n    \"target_candidates\": [\n      {\n        \"aliases\": [],\n        \"component\": \"button.review-dismiss\",\n        \"event_count\": 1,\n        \"event_ids\": [\n          1\n        ],\n        \"first_elapsed_ms\": 200,\n        \"last_elapsed_ms\": 200,\n        \"resolution_status\": \"candidate\",\n        \"selectors\": [\n          \"button.review-dismiss\"\n        ],\n        \"source\": \"event.target\",\n        \"spatial_hint\": {\n          \"x\": 10,\n          \"y\": 10\n        },\n        \"target_ref\": \"button.review-dismiss\"\n      }\n    ],\n    \"target_events\": [\n      {\n        \"elapsed_ms\": 200,\n        \"event_id\": 1,\n        \"source\": \"event.target\",\n        \"target_ref\": \"button.review-dismiss\",\n        \"type\": \"click\",\n        \"x\": 10,\n        \"y\": 10\n      }\n    ],\n    \"type_counts\": {\n      \"click\": 1\n    }\n  },\n  \"feedback_items\": [\n    {\n      \"confidence\": 0.72,\n      \"evidence\": {\n        \"event_ids\": [\n          1\n        ],\n        \"stroke_ids\": [],\n        \"transcript_segment_ids\": [\n          \"seg_001\"\n        ]\n      },\n      \"id\": \"fb_001\",\n      \"normalized_claim\": \"The referenced UI element is not centered.\",\n      \"reviewer_quote\": \"This button is not centered.\",\n      \"severity\": \"medium\",\n      \"target_refs\": [\n        \"button.review-dismiss\"\n      ],\n      \"type\": \"layout\"\n    }\n  ],\n  \"implementation_handoff\": {\n    \"files_to_inspect_first\": [],\n    \"implementation_tasks\": [\n      {\n        \"acceptance_checks\": [\n          \"Verify the reviewed UI no longer exhibits: The referenced UI element is not centered.\",\n          \"Verify the change is limited to the reviewed surface unless the codebase requires shared component changes.\",\n          \"Verify no unrelated redesign or issue-note creation was introduced.\"\n        ],\n        \"confidence\": 0.72,\n        \"constraints\": [\n          \"Preserve reviewer voice and direct evidence.\",\n          \"Do not invent acceptance criteria beyond the reviewer's stated feedback.\",\n          \"Preserve existing UX unless the reviewer explicitly criticized it.\"\n        ],\n        \"do_not_do\": [\n          \"Do not create ISS notes from this pipeline output.\",\n          \"Do not treat silent gestures as feedback without matching speech.\",\n          \"Do not infer unstated redesign requirements.\"\n        ],\n        \"evidence\": {\n          \"event_ids\": [\n            1\n          ],\n          \"quote\": \"This button is not centered.\",\n          \"stroke_ids\": [],\n          \"transcript_segment_ids\": [\n            \"seg_001\"\n          ]\n        },\n        \"feedback_item_id\": \"fb_001\",\n        \"files_to_inspect_first\": [],\n        \"open_questions\": [],\n        \"primary_files\": [],\n        \"problem\": \"The referenced UI element is not centered.\",\n        \"recommended_first_file\": null,\n        \"reviewer_quote\": \"This button is not centered.\",\n        \"selectors\": [\n          \"button.review-dismiss\"\n        ],\n        \"severity\": \"medium\",\n        \"source_binding_status\": \"missing\",\n        \"source_references\": [],\n        \"style_files\": [],\n        \"supporting_files\": [],\n        \"target_refs\": [\n          \"button.review-dismiss\"\n        ],\n        \"title\": \"The referenced UI element is not centered.\",\n        \"type\": \"layout\"\n      }\n    ],\n    \"non_goals\": [\n      \"Do not create ISS notes in the review-processing pipeline.\",\n      \"Do not implement fixes in the review-processing pipeline.\",\n      \"Do not infer a redesign beyond what the reviewer actually said.\"\n    ],\n    \"open_questions\": [],\n    \"verification_notes\": [\n      \"fb_001: source binding missing; inspect before implementation.\"\n    ]\n  },\n  \"negative_evidence\": {\n    \"discarded_events\": [],\n    \"filtered_points\": [],\n    \"silent_annotations\": []\n  },\n  \"quality\": {\n    \"feedback_item_count\": 1,\n    \"must_fix_before_delegation\": [\n      \"source binding missing or deferred for: fb_001\"\n    ],\n    \"status\": \"needs_source_binding\",\n    \"target_candidate_count\": 1,\n    \"warnings\": []\n  },\n  \"review\": {\n    \"duration_ms\": 1000,\n    \"review_id\": \"review_12345678\",\n    \"review_id_short\": \"review_1\",\n    \"reviewed_at\": \"2026-01-01T00:00:00Z\",\n    \"subject_id\": \"http://fixture.test\",\n    \"submitted_by\": \"root-submitted_by\"\n  },\n  \"schema_version\": 2,\n  \"segments\": [\n    {\n      \"end_ms\": 500,\n      \"id\": \"seg_001\",\n      \"nearby_event_ids\": [\n        1\n      ],\n      \"nearby_stroke_ids\": [],\n      \"nearby_target_refs\": [\n        \"button.review-dismiss\"\n      ],\n      \"start_ms\": 0,\n      \"text\": \"This button is not centered.\",\n      \"word_count\": 5\n    }\n  ],\n  \"source_bindings\": [],\n  \"transcript\": {\n    \"audio_offset_ms\": 0,\n    \"text\": \"This button is not centered.\",\n    \"words\": [\n      {\n        \"end_ms\": 100,\n        \"start_ms\": 0,\n        \"text\": \"This\"\n      },\n      {\n        \"end_ms\": 200,\n        \"start_ms\": 100,\n        \"text\": \"button\"\n      },\n      {\n        \"end_ms\": 300,\n        \"start_ms\": 200,\n        \"text\": \"is\"\n      },\n      {\n        \"end_ms\": 400,\n        \"start_ms\": 300,\n        \"text\": \"not\"\n      },\n      {\n        \"end_ms\": 500,\n        \"start_ms\": 400,\n        \"text\": \"centered.\"\n      }\n    ]\n  }\n}",
+            "media_type": "application/json"
+          },
+          "step_5-raw-outputs": {
+            "content_utf8": "{\"actionability\":{\"actionable_now\":[],\"design_preference\":[{\"confidence\":0.72,\"feedback_item_id\":\"fb_001\",\"reason\":\"feedback is plausible but source binding is not verified\",\"source_binding_status\":\"missing\",\"target_refs\":[\"button.review-dismiss\"],\"type\":\"layout\"}],\"discarded_or_filtered\":[],\"needs_human_clarification\":[],\"non_issue\":[]},\"filtered_points\":[],\"implementation_handoff\":{\"files_to_inspect_first\":[],\"implementation_tasks\":[{\"acceptance_checks\":[\"Verify the reviewed UI no longer exhibits: The referenced UI element is not centered.\",\"Verify the change is limited to the reviewed surface unless the codebase requires shared component changes.\",\"Verify no unrelated redesign or issue-note creation was introduced.\"],\"confidence\":0.72,\"constraints\":[\"Preserve reviewer voice and direct evidence.\",\"Do not invent acceptance criteria beyond the reviewer's stated feedback.\",\"Preserve existing UX unless the reviewer explicitly criticized it.\"],\"do_not_do\":[\"Do not create ISS notes from this pipeline output.\",\"Do not treat silent gestures as feedback without matching speech.\",\"Do not infer unstated redesign requirements.\"],\"evidence\":{\"event_ids\":[1],\"quote\":\"This button is not centered.\",\"stroke_ids\":[],\"transcript_segment_ids\":[\"seg_001\"]},\"feedback_item_id\":\"fb_001\",\"files_to_inspect_first\":[],\"open_questions\":[],\"primary_files\":[],\"problem\":\"The referenced UI element is not centered.\",\"recommended_first_file\":null,\"reviewer_quote\":\"This button is not centered.\",\"selectors\":[\"button.review-dismiss\"],\"severity\":\"medium\",\"source_binding_status\":\"missing\",\"source_references\":[],\"style_files\":[],\"supporting_files\":[],\"target_refs\":[\"button.review-dismiss\"],\"title\":\"The referenced UI element is not centered.\",\"type\":\"layout\"}],\"non_goals\":[\"Do not create ISS notes in the review-processing pipeline.\",\"Do not implement fixes in the review-processing pipeline.\",\"Do not infer a redesign beyond what the reviewer actually said.\"],\"open_questions\":[],\"verification_notes\":[\"fb_001: source binding missing; inspect before implementation.\"]},\"negative_evidence\":{\"discarded_events\":[],\"filtered_points\":[],\"silent_annotations\":[]},\"observations\":[{\"confidence\":0.72,\"evidence\":{\"event_ids\":[1],\"stroke_ids\":[],\"transcript_segment_ids\":[\"seg_001\"]},\"id\":\"fb_001\",\"normalized_claim\":\"The referenced UI element is not centered.\",\"reviewer_quote\":\"This button is not centered.\",\"severity\":\"medium\",\"target_refs\":[\"button.review-dismiss\"],\"type\":\"layout\"}],\"review_packet_path\":\"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/artifacts/review_packet.json\",\"review_packet_status\":\"needs_source_binding\",\"silent_annotations\":[],\"target_events\":[{\"elapsed_ms\":200,\"event_id\":1,\"source\":\"event.target\",\"target_ref\":\"button.review-dismiss\",\"type\":\"click\",\"x\":10,\"y\":10}]}",
+            "media_type": "application/json"
+          },
+          "step_6-raw-outputs": {
+            "content_utf8": "{\"codebase_context\":[{\"caveats\":[\"No verified source file references were available in the local run.\"],\"component\":\"button.review-dismiss\",\"confidence\":\"medium\",\"feedback_item_id\":\"fb_001\",\"files_to_inspect_first\":[],\"likely_cause\":null,\"open_questions\":[\"Which local codebase maps to subject_id http://fixture.test for target button.review-dismiss?\"],\"primary_files\":[],\"reason\":\"source binding unavailable until subject_id is mapped to a local codebase root\",\"recommended_first_file\":null,\"references\":[],\"selectors\":[\"button.review-dismiss\"],\"status\":\"deferred\",\"style_files\":[],\"subject_id\":\"http://fixture.test\",\"supporting_files\":[],\"target_refs\":[\"button.review-dismiss\"]}]}",
+            "media_type": "application/json"
+          },
+          "step_7-final-packet": {
+            "content_utf8": "{\n  \"actionability\": {\n    \"actionable_now\": [],\n    \"design_preference\": [\n      {\n        \"confidence\": 0.72,\n        \"feedback_item_id\": \"fb_001\",\n        \"reason\": \"feedback is plausible but source binding is not verified\",\n        \"source_binding_status\": \"deferred\",\n        \"target_refs\": [\n          \"button.review-dismiss\"\n        ],\n        \"type\": \"layout\"\n      }\n    ],\n    \"discarded_or_filtered\": [],\n    \"needs_human_clarification\": [],\n    \"non_issue\": []\n  },\n  \"artifacts\": {\n    \"audio_asset_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/assets/review_1/audio_audio_1.webm\",\n    \"case_dir\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6\",\n    \"events_asset_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/assets/review_1/events_events_1.json\",\n    \"review_note_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/artifacts/review_review_1.md\",\n    \"review_packet_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/artifacts/review_packet.json\",\n    \"transcript_note_path\": \"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/artifacts/transcript_review_1.md\"\n  },\n  \"events\": {\n    \"count\": 1,\n    \"page_events\": [],\n    \"pointer_windows\": [\n      {\n        \"end_ms\": 200,\n        \"event_ids\": [\n          1\n        ],\n        \"id\": \"ptr_001\",\n        \"start_ms\": 200,\n        \"target_refs\": [\n          \"button.review-dismiss\"\n        ]\n      }\n    ],\n    \"scroll_events\": [],\n    \"stroke_groups\": [],\n    \"target_candidates\": [\n      {\n        \"aliases\": [],\n        \"component\": \"button.review-dismiss\",\n        \"event_count\": 1,\n        \"event_ids\": [\n          1\n        ],\n        \"first_elapsed_ms\": 200,\n        \"last_elapsed_ms\": 200,\n        \"resolution_status\": \"candidate\",\n        \"selectors\": [\n          \"button.review-dismiss\"\n        ],\n        \"source\": \"event.target\",\n        \"spatial_hint\": {\n          \"x\": 10,\n          \"y\": 10\n        },\n        \"target_ref\": \"button.review-dismiss\"\n      }\n    ],\n    \"target_events\": [\n      {\n        \"elapsed_ms\": 200,\n        \"event_id\": 1,\n        \"source\": \"event.target\",\n        \"target_ref\": \"button.review-dismiss\",\n        \"type\": \"click\",\n        \"x\": 10,\n        \"y\": 10\n      }\n    ],\n    \"type_counts\": {\n      \"click\": 1\n    }\n  },\n  \"feedback_items\": [\n    {\n      \"confidence\": 0.72,\n      \"evidence\": {\n        \"event_ids\": [\n          1\n        ],\n        \"stroke_ids\": [],\n        \"transcript_segment_ids\": [\n          \"seg_001\"\n        ]\n      },\n      \"id\": \"fb_001\",\n      \"normalized_claim\": \"The referenced UI element is not centered.\",\n      \"reviewer_quote\": \"This button is not centered.\",\n      \"severity\": \"medium\",\n      \"target_refs\": [\n        \"button.review-dismiss\"\n      ],\n      \"type\": \"layout\"\n    }\n  ],\n  \"implementation_handoff\": {\n    \"files_to_inspect_first\": [],\n    \"implementation_tasks\": [\n      {\n        \"acceptance_checks\": [\n          \"Verify the reviewed UI no longer exhibits: The referenced UI element is not centered.\",\n          \"Verify the change is limited to the reviewed surface unless the codebase requires shared component changes.\",\n          \"Verify no unrelated redesign or issue-note creation was introduced.\"\n        ],\n        \"confidence\": 0.72,\n        \"constraints\": [\n          \"Preserve reviewer voice and direct evidence.\",\n          \"Do not invent acceptance criteria beyond the reviewer's stated feedback.\",\n          \"Preserve existing UX unless the reviewer explicitly criticized it.\"\n        ],\n        \"do_not_do\": [\n          \"Do not create ISS notes from this pipeline output.\",\n          \"Do not treat silent gestures as feedback without matching speech.\",\n          \"Do not infer unstated redesign requirements.\"\n        ],\n        \"evidence\": {\n          \"event_ids\": [\n            1\n          ],\n          \"quote\": \"This button is not centered.\",\n          \"stroke_ids\": [],\n          \"transcript_segment_ids\": [\n            \"seg_001\"\n          ]\n        },\n        \"feedback_item_id\": \"fb_001\",\n        \"files_to_inspect_first\": [],\n        \"open_questions\": [\n          \"Which local codebase maps to subject_id http://fixture.test for target button.review-dismiss?\"\n        ],\n        \"primary_files\": [],\n        \"problem\": \"The referenced UI element is not centered.\",\n        \"recommended_first_file\": null,\n        \"reviewer_quote\": \"This button is not centered.\",\n        \"selectors\": [\n          \"button.review-dismiss\"\n        ],\n        \"severity\": \"medium\",\n        \"source_binding_status\": \"deferred\",\n        \"source_references\": [],\n        \"style_files\": [],\n        \"supporting_files\": [],\n        \"target_refs\": [\n          \"button.review-dismiss\"\n        ],\n        \"title\": \"The referenced UI element is not centered.\",\n        \"type\": \"layout\"\n      }\n    ],\n    \"non_goals\": [\n      \"Do not create ISS notes in the review-processing pipeline.\",\n      \"Do not implement fixes in the review-processing pipeline.\",\n      \"Do not infer a redesign beyond what the reviewer actually said.\"\n    ],\n    \"open_questions\": [\n      \"Which local codebase maps to subject_id http://fixture.test for target button.review-dismiss?\"\n    ],\n    \"verification_notes\": [\n      \"fb_001: source binding deferred; inspect before implementation.\"\n    ]\n  },\n  \"negative_evidence\": {\n    \"discarded_events\": [],\n    \"filtered_points\": [],\n    \"silent_annotations\": []\n  },\n  \"quality\": {\n    \"feedback_item_count\": 1,\n    \"must_fix_before_delegation\": [\n      \"source binding missing or deferred for: fb_001\"\n    ],\n    \"status\": \"needs_source_binding\",\n    \"target_candidate_count\": 1,\n    \"warnings\": []\n  },\n  \"review\": {\n    \"duration_ms\": 1000,\n    \"review_id\": \"review_12345678\",\n    \"review_id_short\": \"review_1\",\n    \"reviewed_at\": \"2026-01-01T00:00:00Z\",\n    \"subject_id\": \"http://fixture.test\",\n    \"submitted_by\": \"root-submitted_by\"\n  },\n  \"schema_version\": 2,\n  \"segments\": [\n    {\n      \"end_ms\": 500,\n      \"id\": \"seg_001\",\n      \"nearby_event_ids\": [\n        1\n      ],\n      \"nearby_stroke_ids\": [],\n      \"nearby_target_refs\": [\n        \"button.review-dismiss\"\n      ],\n      \"start_ms\": 0,\n      \"text\": \"This button is not centered.\",\n      \"word_count\": 5\n    }\n  ],\n  \"source_bindings\": [\n    {\n      \"caveats\": [\n        \"No verified source file references were available in the local run.\"\n      ],\n      \"component\": \"button.review-dismiss\",\n      \"confidence\": \"medium\",\n      \"feedback_item_id\": \"fb_001\",\n      \"files_to_inspect_first\": [],\n      \"likely_cause\": null,\n      \"open_questions\": [\n        \"Which local codebase maps to subject_id http://fixture.test for target button.review-dismiss?\"\n      ],\n      \"primary_files\": [],\n      \"reason\": \"source binding unavailable until subject_id is mapped to a local codebase root\",\n      \"recommended_first_file\": null,\n      \"references\": [],\n      \"selectors\": [\n        \"button.review-dismiss\"\n      ],\n      \"status\": \"deferred\",\n      \"style_files\": [],\n      \"subject_id\": \"http://fixture.test\",\n      \"supporting_files\": [],\n      \"target_refs\": [\n        \"button.review-dismiss\"\n      ]\n    }\n  ],\n  \"transcript\": {\n    \"audio_offset_ms\": 0,\n    \"text\": \"This button is not centered.\",\n    \"words\": [\n      {\n        \"end_ms\": 100,\n        \"start_ms\": 0,\n        \"text\": \"This\"\n      },\n      {\n        \"end_ms\": 200,\n        \"start_ms\": 100,\n        \"text\": \"button\"\n      },\n      {\n        \"end_ms\": 300,\n        \"start_ms\": 200,\n        \"text\": \"is\"\n      },\n      {\n        \"end_ms\": 400,\n        \"start_ms\": 300,\n        \"text\": \"not\"\n      },\n      {\n        \"end_ms\": 500,\n        \"start_ms\": 400,\n        \"text\": \"centered.\"\n      }\n    ]\n  }\n}",
+            "media_type": "application/json"
+          },
+          "step_7-raw-outputs": {
+            "content_utf8": "{\"review_note_path\":\"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/artifacts/review_review_1.md\"}",
+            "media_type": "application/json"
+          },
+          "step_7-review": {
+            "content_utf8": "# Review review_1\n\n## Packet Status\n\nStatus: `needs_source_binding`\nFeedback items: `1`\nMust fix before delegation: ['source binding missing or deferred for: fb_001']\n\n> Warning: this packet is degraded for implementation delegation. Resolve the status items before treating it as ready.\n\n## Implementation Handoff\n\n### Task 1: The referenced UI element is not centered.\n\nProblem: The referenced UI element is not centered.\nReviewer quote: \"This button is not centered.\"\nTargets: `button.review-dismiss`\nSource binding: `deferred`\nEvidence: segments=['seg_001'], events=[1], strokes=[]\nFiles to inspect first: []\nOpen questions: ['Which local codebase maps to subject_id http://fixture.test for target button.review-dismiss?']\nAcceptance checks:\n- Verify the reviewed UI no longer exhibits: The referenced UI element is not centered.\n- Verify the change is limited to the reviewed surface unless the codebase requires shared component changes.\n- Verify no unrelated redesign or issue-note creation was introduced.\nDo not do:\n- Do not create ISS notes from this pipeline output.\n- Do not treat silent gestures as feedback without matching speech.\n- Do not infer unstated redesign requirements.\n\n## Source Binding\n\n- `fb_001` \u2192 `deferred` \u2014 source binding unavailable until subject_id is mapped to a local codebase root\n\n## Non-goals\n\n- Do not create ISS notes in the review-processing pipeline.\n- Do not implement fixes in the review-processing pipeline.\n- Do not infer a redesign beyond what the reviewer actually said.\n\n## Feedback Items\n\n### 1. The referenced UI element is not centered.\n\nReviewer quote: \"This button is not centered.\"\nType: `layout` \u00b7 Confidence: `0.72` \u00b7 Severity: `medium`\nTargets: `button.review-dismiss`\nEvidence: segments=['seg_001'], events=[1]\n\n## What the reviewer said\n\nThis button is not centered.\n",
+            "media_type": "text/markdown"
+          },
+          "step_8-raw-outputs": {
+            "content_utf8": "{\"review_status_updated\":{\"automaton_event\":\"packet_failed\",\"automaton_status\":\"failed\",\"reason\":\"packet_failed\",\"review_id\":\"review_12345678\",\"review_note_path\":\"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/artifacts/review_review_1.md\",\"review_packet_path\":\"/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-lmt4m4d2/case_d914b034e8954c909f063855c9c075ec/attempts/case_run_4fc8ba88d2fb4c819a125df91673d4e6/artifacts/review_packet.json\",\"review_packet_status\":\"needs_source_binding\",\"review_scope\":\"full_output_against_objective_process_prompt_acceptance_criteria\",\"status\":\"failed\"}}",
+            "media_type": "application/json"
+          }
+        },
+        "inputs": {
+          "audio_asset": {
+            "$artifact": "step_1-audio"
+          },
+          "duration_ms": 1000,
+          "events_asset": {
+            "$artifact": "step_1-events"
+          },
+          "review_id": "review_12345678",
+          "reviewed_at": "2026-01-01T00:00:00Z",
+          "subject_id": "http://fixture.test",
+          "submitted_by": "root-submitted_by"
+        },
+        "scenario_id": "legacy-failed",
+        "schema": "runtime.shadow-fixture.v1",
+        "steps": {
+          "step_1": {
+            "outcome": "succeeded",
+            "outputs": {
+              "audio_asset": {
+                "$artifact": "step_1-audio"
+              },
+              "events": [
+                {
+                  "end_ms": 200,
+                  "event_index": 0,
+                  "kind": "click",
+                  "start_ms": 200,
+                  "target": "button.review-dismiss"
+                }
+              ],
+              "review_id_short": "review_1"
+            }
+          },
+          "step_2": {
+            "outcome": "succeeded",
+            "outputs": {
+              "audio_offset_ms": 0,
+              "transcript": "This button is not centered.",
+              "words": [
+                {
+                  "end_ms": 100,
+                  "start_ms": 0,
+                  "text": "This"
+                },
+                {
+                  "end_ms": 200,
+                  "start_ms": 100,
+                  "text": "button"
+                },
+                {
+                  "end_ms": 300,
+                  "start_ms": 200,
+                  "text": "is"
+                },
+                {
+                  "end_ms": 400,
+                  "start_ms": 300,
+                  "text": "not"
+                },
+                {
+                  "end_ms": 500,
+                  "start_ms": 400,
+                  "text": "centered."
+                }
+              ]
+            }
+          },
+          "step_3": {
+            "outcome": "succeeded",
+            "outputs": {
+              "component_names": [
+                {
+                  "aliases": [],
+                  "component": "button.review-dismiss",
+                  "resolution_status": "candidate",
+                  "selectors": [
+                    "button.review-dismiss"
+                  ],
+                  "source": "event.target",
+                  "spatial_hint": "{\"x\":10,\"y\":10}"
+                }
+              ]
+            }
+          },
+          "step_4": {
+            "outcome": "succeeded",
+            "outputs": {
+              "resolved_transcript": "This button is not centered.",
+              "transcript_note": {
+                "$artifact": "step_4-transcript"
+              }
+            }
+          },
+          "step_5": {
+            "outcome": "succeeded",
+            "outputs": {
+              "actionability": {
+                "actionable_now": [],
+                "design_preference": [
+                  "{\"confidence\":0.72,\"feedback_item_id\":\"fb_001\",\"reason\":\"feedback is plausible but source binding is not verified\",\"source_binding_status\":\"missing\",\"target_refs\":[\"button.review-dismiss\"],\"type\":\"layout\"}"
+                ],
+                "discarded_or_filtered": [],
+                "needs_human_clarification": [],
+                "non_issue": []
+              },
+              "filtered_points": [],
+              "implementation_handoff": {
+                "files_to_inspect_first": [],
+                "implementation_tasks": [
+                  "{\"acceptance_checks\":[\"Verify the reviewed UI no longer exhibits: The referenced UI element is not centered.\",\"Verify the change is limited to the reviewed surface unless the codebase requires shared component changes.\",\"Verify no unrelated redesign or issue-note creation was introduced.\"],\"confidence\":0.72,\"constraints\":[\"Preserve reviewer voice and direct evidence.\",\"Do not invent acceptance criteria beyond the reviewer's stated feedback.\",\"Preserve existing UX unless the reviewer explicitly criticized it.\"],\"do_not_do\":[\"Do not create ISS notes from this pipeline output.\",\"Do not treat silent gestures as feedback without matching speech.\",\"Do not infer unstated redesign requirements.\"],\"evidence\":{\"event_ids\":[1],\"quote\":\"This button is not centered.\",\"stroke_ids\":[],\"transcript_segment_ids\":[\"seg_001\"]},\"feedback_item_id\":\"fb_001\",\"files_to_inspect_first\":[],\"open_questions\":[],\"primary_files\":[],\"problem\":\"The referenced UI element is not centered.\",\"recommended_first_file\":null,\"reviewer_quote\":\"This button is not centered.\",\"selectors\":[\"button.review-dismiss\"],\"severity\":\"medium\",\"source_binding_status\":\"missing\",\"source_references\":[],\"style_files\":[],\"supporting_files\":[],\"target_refs\":[\"button.review-dismiss\"],\"title\":\"The referenced UI element is not centered.\",\"type\":\"layout\"}"
+                ],
+                "non_goals": [
+                  "Do not create ISS notes in the review-processing pipeline.",
+                  "Do not implement fixes in the review-processing pipeline.",
+                  "Do not infer a redesign beyond what the reviewer actually said."
+                ],
+                "open_questions": [],
+                "verification_notes": [
+                  "fb_001: source binding missing; inspect before implementation."
+                ]
+              },
+              "negative_evidence": {
+                "discarded_events": [],
+                "filtered_points": [],
+                "silent_annotations": []
+              },
+              "observations": [
+                {
+                  "component": "button.review-dismiss",
+                  "evidence": "{\"event_ids\":[1],\"stroke_ids\":[],\"transcript_segment_ids\":[\"seg_001\"]}",
+                  "issue": "The referenced UI element is not centered.",
+                  "match_type": "legacy-normalized-evidence",
+                  "observation_id": "fb_001",
+                  "selectors": [
+                    "button.review-dismiss"
+                  ],
+                  "type": "layout",
+                  "what_they_said": "This button is not centered."
+                }
+              ],
+              "review_packet": {
+                "$artifact": "step_5-packet"
+              },
+              "review_packet_status": "needs_source_binding",
+              "silent_annotations": [],
+              "target_events": [
+                {
+                  "end_ms": 200,
+                  "event_index": 0,
+                  "start_ms": 200,
+                  "target": "button.review-dismiss"
+                }
+              ]
+            }
+          },
+          "step_6": {
+            "outcome": "succeeded",
+            "outputs": {
+              "codebase_context": [
+                {
+                  "caveats": [
+                    "No verified source file references were available in the local run."
+                  ],
+                  "component": "button.review-dismiss",
+                  "confidence": "medium",
+                  "likely_cause": "",
+                  "observation_id": "fb_001",
+                  "reasoning": "source binding unavailable until subject_id is mapped to a local codebase root",
+                  "references": [],
+                  "resolution_status": "deferred"
+                }
+              ]
+            }
+          },
+          "step_7": {
+            "outcome": "succeeded",
+            "outputs": {
+              "review_note": {
+                "$artifact": "step_7-review"
+              },
+              "review_packet": {
+                "$artifact": "step_7-final-packet"
+              },
+              "review_packet_status": "needs_source_binding"
+            }
+          },
+          "step_8": {
+            "outcome": "failed",
+            "reason": "Legacy packet validation rejected status writeback."
+          },
+          "step_9": {
+            "outcome": "succeeded",
+            "outputs": {}
+          }
+        }
+      }
+    }
+  ]
+}

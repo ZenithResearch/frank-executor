@@ -1,0 +1,23 @@
+{
+  "schema": "frank.work.v1",
+  "binding": {
+    "run_id": "run-example",
+    "step_id": "compute",
+    "attempt_id": "attempt-example",
+    "fence": 1
+  },
+  "actor_id": "frank-example",
+  "integration_id": "example",
+  "route": "local",
+  "effect_id": "effect-example",
+  "operation": "compute",
+  "scope": "answer",
+  "inputs": {
+    "number": 7
+  },
+  "output_types": {
+    "answer": {
+      "kind": "integer"
+    }
+  }
+}

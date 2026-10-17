@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.zenith.local/frank/native-result-authority-v1.schema.json",
+  "title": "Frank native result authority profile v1",
+  "description": "Public verification-only profile; production issuer, result-party, native allocation and installed-chain qualification remain separate.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/envelope"
+    },
+    {
+      "$ref": "#/$defs/payload"
+    }
+  ],
+  "$defs": {
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"
+        },
+        "step_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"
+        },
+        "attempt_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"
+        },
+        "fence": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "run_id",
+        "step_id",
+        "attempt_id",
+        "fence"
+      ]
+    },
+    "unsigned_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "frank.result.v1"
+        },
+        "event_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"
+        },
+        "binding": {
+          "$ref": "#/$defs/binding"
+        },
+        "actor_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"
+        },
+        "integration_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"
+        },
+        "route": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"
+        },
+        "effect_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])"
+        },
+        "provider_reference": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "outcome": {
+          "enum": [
+            "succeeded",
+            "failed"
+          ]
+        },
+        "outputs": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "schema",
+        "event_id",
+        "binding",
+        "actor_id",
+        "integration_id",
+        "route",
+        "effect_id",
+        "provider_reference",
+        "outcome",
+        "outputs"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "not": {
+                  "const": "succeeded"
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "outputs": {
+                "maxProperties": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "packet_hex",
+        "signed_context_hex"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frank.secs-result-envelope.v1"
+        },
+        "packet_hex": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2097152,
+          "pattern": "^(?:[a-f0-9]{2})+(?![\\s\\S])"
+        },
+        "signed_context_hex": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 131072,
+          "pattern": "^(?:[a-f0-9]{2})+(?![\\s\\S])"
+        }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "work_sha256",
+        "result"
+      ],
+      "properties": {
+        "schema": {
+          "const": "frank.native-result-payload.v1"
+        },
+        "work_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "result": {
+          "$ref": "#/$defs/unsigned_result"
+        }
+      }
+    }
+  }
+}

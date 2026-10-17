@@ -1,0 +1,149 @@
+{
+  "packets": [
+    {
+      "file": "stored-v1-source-available-step_5.json",
+      "kind": "stored-v1",
+      "origin": "demonstration:stored-v1-source-available-step_5.json",
+      "reference": {
+        "byte_length": 1657,
+        "content_hash": "7a87eec71d20e0443ee9606ac75d795073dc118d2ded98aa7c08b1fdf7671ce5",
+        "media_type": "application/json"
+      },
+      "scenario": "source-available",
+      "step": "step_5"
+    },
+    {
+      "file": "stored-v1-source-available-step_7.json",
+      "kind": "stored-v1",
+      "origin": "demonstration:stored-v1-source-available-step_7.json",
+      "reference": {
+        "byte_length": 2604,
+        "content_hash": "373bec13ec1ffc3158e129dc29faafd9bc3891363f1e37d614ca7897ad153e4e",
+        "media_type": "application/json"
+      },
+      "scenario": "source-available",
+      "step": "step_7"
+    },
+    {
+      "file": "stored-v1-source-unavailable-step_5.json",
+      "kind": "stored-v1",
+      "origin": "demonstration:stored-v1-source-unavailable-step_5.json",
+      "reference": {
+        "byte_length": 1692,
+        "content_hash": "413b238f366e1f8b01585391dd903d401fecfa0f45afa759a4c3c9c33dc2a385",
+        "media_type": "application/json"
+      },
+      "scenario": "source-unavailable",
+      "step": "step_5"
+    },
+    {
+      "file": "stored-v1-source-unavailable-step_7.json",
+      "kind": "stored-v1",
+      "origin": "demonstration:stored-v1-source-unavailable-step_7.json",
+      "reference": {
+        "byte_length": 2216,
+        "content_hash": "feaed9b6bd5ace9a5697d7511993ef01ed343b295b0988e7629388167194855e",
+        "media_type": "application/json"
+      },
+      "scenario": "source-unavailable",
+      "step": "step_7"
+    },
+    {
+      "file": "legacy-source-available-step_5.json",
+      "kind": "legacy",
+      "origin": "demonstration:legacy-source-available-step_5.json",
+      "reference": {
+        "byte_length": 7060,
+        "content_hash": "cd94954698c52c7e5ee8a611bc50b1a82ee2223a6b266ecb7c90b7ee985d5386",
+        "media_type": "application/json"
+      },
+      "scenario": "source-available",
+      "step": "step_5"
+    },
+    {
+      "file": "legacy-source-available-step_7.json",
+      "kind": "legacy",
+      "origin": "demonstration:legacy-source-available-step_7.json",
+      "reference": {
+        "byte_length": 9265,
+        "content_hash": "e760314680e0fd85c574276f37b92f14b0fb823546366d3dd8499d1dc1bdd90d",
+        "media_type": "application/json"
+      },
+      "scenario": "source-available",
+      "step": "step_7"
+    },
+    {
+      "file": "legacy-source-unavailable-step_5.json",
+      "kind": "legacy",
+      "origin": "demonstration:legacy-source-unavailable-step_5.json",
+      "reference": {
+        "byte_length": 7060,
+        "content_hash": "aa4274a340360d8efe7f0eb8c05d17afaed67eba16b88a9e7ed8ffb9a79f4d13",
+        "media_type": "application/json"
+      },
+      "scenario": "source-unavailable",
+      "step": "step_5"
+    },
+    {
+      "file": "legacy-source-unavailable-step_7.json",
+      "kind": "legacy",
+      "origin": "demonstration:legacy-source-unavailable-step_7.json",
+      "reference": {
+        "byte_length": 8351,
+        "content_hash": "68872723999351e2ea324c7dcd8e4de94c67a67422d601319b2fc21fdb7e64ee",
+        "media_type": "application/json"
+      },
+      "scenario": "source-unavailable",
+      "step": "step_7"
+    },
+    {
+      "file": "current-v1-source-available-step_5.json",
+      "kind": "current-v1",
+      "origin": "demonstration:current-v1-source-available-step_5.json",
+      "reference": {
+        "byte_length": 2013,
+        "content_hash": "16100bdf2f17b1e19515e4d26434cbd14b02275a56eca177a2549bf33449f464",
+        "media_type": "application/json"
+      },
+      "scenario": "source-available",
+      "step": "step_5"
+    },
+    {
+      "file": "current-v1-source-available-step_7.json",
+      "kind": "current-v1",
+      "origin": "demonstration:current-v1-source-available-step_7.json",
+      "reference": {
+        "byte_length": 3016,
+        "content_hash": "20521923ddda5982b22cdcfd01f235655da96b0f25d9073d446a006f848734f9",
+        "media_type": "application/json"
+      },
+      "scenario": "source-available",
+      "step": "step_7"
+    },
+    {
+      "file": "current-v1-source-unavailable-step_5.json",
+      "kind": "current-v1",
+      "origin": "demonstration:current-v1-source-unavailable-step_5.json",
+      "reference": {
+        "byte_length": 2048,
+        "content_hash": "785c26b21eb547c822e428655f4ad395417c49e549b8129948891041efc63c96",
+        "media_type": "application/json"
+      },
+      "scenario": "source-unavailable",
+      "step": "step_5"
+    },
+    {
+      "file": "current-v1-source-unavailable-step_7.json",
+      "kind": "current-v1",
+      "origin": "demonstration:current-v1-source-unavailable-step_7.json",
+      "reference": {
+        "byte_length": 2614,
+        "content_hash": "c87ce8e629e7e7ff133aec28bc274569f74be2b741ad0ac958d3321756731613",
+        "media_type": "application/json"
+      },
+      "scenario": "source-unavailable",
+      "step": "step_7"
+    }
+  ],
+  "schema": "review.packet-reader-fixtures.v1"
+}
