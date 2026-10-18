@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+from contextlib import closing
 from dataclasses import dataclass
 from importlib.resources import files
 import json
@@ -23,7 +24,7 @@ import uuid
 from process_runtime_client import RuntimeClient, RuntimeClientError, resource_for
 from process_runtime_client.client import validate_wire
 
-from .journal import Journal
+from .journal import APP_ID, Journal
 from .model import Rejected, UnknownOutcome, canonical, decode_json, digest, identity
 from .runtime import ContractValidator, GeneratedClientAdapter, RuntimeGateway
 from .wallet_authority import WalletCallAuthority, _pinned_file
@@ -31,7 +32,7 @@ from .wallet_authority import WalletCallAuthority, _pinned_file
 MAX_INPUT_BYTES = 65_536
 MARKER = "frank-workspace-cleanup.json"
 COMMANDS = {"draft-put":"process.draft.put", "publish":"process.publish"}
-ACTIONS = ("check-config", "catalog", "get", "validate", "draft-put", "publish", "resume-command")
+ACTIONS = ("check-config", "catalog", "get", "validate", "draft-put", "publish", "resume-command", "check-renewal", "migrate-binding")
 
 
 class CleanupUnresolved(Rejected):
@@ -147,6 +148,248 @@ def bind_journal(profile, journal):
                 raise Rejected("Nonempty journal has no workspace binding")
         db.execute("CREATE TABLE workspace_binding(singleton INTEGER PRIMARY KEY CHECK(singleton=1),configuration_sha256 TEXT NOT NULL)")
         db.execute("INSERT INTO workspace_binding VALUES (1,?)", (profile.config_sha256,))
+
+
+def _same_except(previous, current, changing=()):
+    if (type(previous) is not dict or type(current) is not dict
+            or {k:v for k,v in previous.items() if k not in changing}
+            != {k:v for k,v in current.items() if k not in changing}):
+        raise Rejected("Workspace renewal changes retained identity or scope")
+
+
+def _selected(value):
+    closed(value, ("path", "sha256"))
+    selected, expected = path(value["path"]), pin(value["sha256"])
+    return selected, decode_json(_pinned_file(selected, expected, MAX_INPUT_BYTES))
+
+
+def _renewal_complete(selection):
+    selected, receipt = _selected(selection)
+    required = {"schema", "plan_sha256", "root", "holder", "native_generation", "native_sha256",
+        "command_issuer", "configuration_hashes", "not_before", "not_after", "identity_not_after",
+        "journal_capacity", "scope", "activation", "service_started", "runtime_store_initialized",
+        "process_created", "run_created"}
+    renewal = receipt.get("schema") == "castalia.wallet-workspace-renewal-complete.v1" if type(receipt) is dict else False
+    closed(receipt, required | ({"previous_complete"} if renewal else set()))
+    if (receipt["schema"] not in {"castalia.wallet-workspace-setup-complete.v1", "castalia.wallet-workspace-renewal-complete.v1"}
+            or any(receipt[n] is not False for n in ("activation", "service_started", "runtime_store_initialized", "process_created", "run_created"))
+            or type(receipt["native_generation"]) is not int or not 1 <= receipt["native_generation"] <= 9_007_199_254_740_991
+            or type(receipt["not_before"]) is not int or type(receipt["not_after"]) is not int
+            or not 0 < receipt["not_before"] < receipt["not_after"] <= 9_007_199_254_740_991
+            or receipt["not_after"] - receipt["not_before"] > 3600):
+        raise Rejected("Bounded inactive workspace renewal receipt required")
+    pin(receipt["plan_sha256"]); pin(receipt["native_sha256"])
+    root = path(receipt["root"])
+    expected = root / "authority"
+    if renewal:
+        expected = expected / "renewals" / str(receipt["native_generation"])
+    if selected != expected / "COMPLETE.json":
+        raise Rejected("Workspace receipt must retain its original publication path")
+    names = {"wallet-command.json", "command-authority.json", "runtime-policy.json", "runtime-receiver.json"}
+    closed(receipt["configuration_hashes"], names)
+    configs = {name:decode_json(_pinned_file(selected.parent / "config" / name, pin(hashed), MAX_INPUT_BYTES))
+               for name, hashed in receipt["configuration_hashes"].items()}
+    return receipt, configs
+
+
+def _migration_evidence(profile, value):
+    """Compare pinned public producer receipts, never custody or authority output.
+
+    These owner-selected metadata facts cannot grant a permission or refresh a
+    pending challenge. Native and Runtime still validate every actual request.
+    """
+    closed(value, ("schema", "previous_configuration", "previous_complete", "renewed_complete"))
+    if value["schema"] != "frank.workspace-migration.v1":
+        raise Rejected("Explicit workspace owner migration required")
+    closed(value["previous_configuration"], ("path", "sha256"))
+    previous = load_profile(value["previous_configuration"]["path"], value["previous_configuration"]["sha256"])
+    before, after = previous.value, profile.value
+    _same_except(before, after, ("wallet",))
+    _same_except(before["wallet"], after["wallet"], ("configuration", "configuration_sha256"))
+    if previous.config_sha256 == profile.config_sha256:
+        raise Rejected("Workspace migration must name a new exact composition")
+    old, oc = _renewal_complete(value["previous_complete"])
+    new, nc = _renewal_complete(value["renewed_complete"])
+    if (new["schema"] != "castalia.wallet-workspace-renewal-complete.v1"
+            or new["previous_complete"] != value["previous_complete"]
+            or new["native_generation"] != old["native_generation"] + 1
+            or new["not_before"] < old["not_before"] or new["not_after"] <= old["not_after"]):
+        raise Rejected("Workspace renewal does not extend its exact predecessor")
+    _same_except(old, new, ("schema", "plan_sha256", "holder", "native_generation", "native_sha256",
+                           "configuration_hashes", "not_before", "not_after", "previous_complete"))
+    root = path(old["root"])
+    if path(after["journal"]) != root / "data/frank-workspace.db":
+        raise Rejected("Workspace journal differs from retained setup root")
+    oh, nh = old["holder"], new["holder"]
+    holder_fields = ("schema", "store_id", "subject_id", "purpose", "application", "state_revision",
+        "key_generation", "key_id", "public_key_hex", "public_key_sha256", "state", "created_at", "key_created_at",
+        "published_at", "not_before", "not_after", "revoked_at", "previous_state_sha256", "owner_input_sha256")
+    closed(oh, holder_fields); closed(nh, holder_fields)
+    _same_except(oh, nh, ("state_revision", "published_at", "previous_state_sha256", "owner_input_sha256"))
+    if (oh["schema"] != "castalia.wallet-service-custody-state.v1" or oh["application"] != "runtime"
+            or oh["state"] != "active" or oh["revoked_at"] is not None
+            or type(oh["state_revision"]) is not int or type(nh["state_revision"]) is not int
+            or not 1 <= oh["state_revision"] < nh["state_revision"] <= 9_007_199_254_740_991
+            or nh["state_revision"] != oh["state_revision"] + 1
+            or nh["previous_state_sha256"] != digest(oh)
+            or type(nh["published_at"]) is not int or type(oh["published_at"]) is not int
+            or nh["published_at"] < oh["published_at"]
+            or type(nh["not_after"]) is not int or nh["not_after"] < new["not_after"]
+            or new["identity_not_after"] != nh["not_after"]):
+        raise Rejected("Workspace renewal must preserve the original active holder")
+    pin(nh["owner_input_sha256"]); pin(oh["owner_input_sha256"])
+    pin(oh["public_key_hex"]); pin(oh["public_key_sha256"])
+    import hashlib
+    if hashlib.sha256(bytes.fromhex(oh["public_key_hex"])).hexdigest() != oh["public_key_sha256"]:
+        raise Rejected("Workspace public holder key digest differs")
+    native_fields = ("schema", "wallet_root", "wallet_observation_pin", "native_root", "native_generation",
+        "native_sha256", "issuer_root", "issuer_node_id", "issuer_key_id", "issuer_public_key_hex",
+        "journal_root", "maximum_ttl", "journal_capacity")
+    for receipt, configs, master, holder, selection in ((old, oc, before, oh, value["previous_complete"]),
+                                                       (new, nc, after, nh, value["renewed_complete"])):
+        config_root = path(selection["path"]).parent / "config"
+        if (path(master["wallet"]["configuration"]) != config_root / "wallet-command.json"
+                or master["wallet"]["configuration_sha256"] != receipt["configuration_hashes"]["wallet-command.json"]):
+            raise Rejected("Workspace master differs from its pinned public receipt")
+        w, n, p, r = (configs[k] for k in ("wallet-command.json", "command-authority.json", "runtime-policy.json", "runtime-receiver.json"))
+        closed(w, ("schema", "application", "native_configuration", "native_configuration_sha256", "wallet_root", "store_binding", "expected_state"))
+        closed(n, native_fields)
+        closed(w["store_binding"], ("store_id", "subject_id", "application", "purpose", "minimum_revision"))
+        closed(w["expected_state"], ("state_revision", "state_sha256"))
+        closed(n["wallet_observation_pin"], ("schema", "store_id", "minimum_state_revision", "minimum_key_generation", "expected_wallet_reference_sha256"))
+        wp = n["wallet_observation_pin"]
+        issuer = closed(receipt["command_issuer"], ("node_id", "key_id", "public_key_hex"))
+        if (w["schema"] != "castalia.wallet-service-command.v1" or w["application"] != "runtime"
+                or w["wallet_root"] != str(root / "authority/wallet") or n["wallet_root"] != w["wallet_root"]
+                or w["native_configuration"] != str(config_root / "command-authority.json")
+                or w["native_configuration_sha256"] != receipt["configuration_hashes"]["command-authority.json"]
+                or w["store_binding"] != {**{k:holder[k] for k in ("store_id", "subject_id", "application", "purpose")}, "minimum_revision":holder["state_revision"]}
+                or w["expected_state"] != {"state_revision":holder["state_revision"], "state_sha256":digest(holder)}
+                or n["schema"] != "secs.service-authority-configuration.v1"
+                or n["native_root"] != str(root / "authority/native") or n["issuer_root"] != str(root / "authority/command-issuer")
+                or n["journal_root"] != str(root / "authority/command-journal")
+                or n["native_generation"] != receipt["native_generation"] or n["native_sha256"] != receipt["native_sha256"]
+                or (n["issuer_node_id"], n["issuer_key_id"], n["issuer_public_key_hex"]) != (issuer["node_id"], issuer["key_id"], issuer["public_key_hex"])
+                or wp["schema"] != "secs.wallet-current-startup-pin.v2" or wp["store_id"] != holder["store_id"]
+                or wp["minimum_state_revision"] != holder["state_revision"] or wp["minimum_key_generation"] != holder["key_generation"]):
+            raise Rejected("Workspace configs do not bind the retained holder and Native owner")
+        pin(wp["expected_wallet_reference_sha256"])
+        closed(p, ("schema", "audience", "keys", "descriptors", "permissions", "revoked_subject_keys"))
+        closed(r, ("schema", "audience", "native_verifier", "policy_file"))
+        if (p["schema"] != "runtime.receiver-policy.v1" or r["schema"] != "runtime.receiver-configuration.v1"
+                or r["audience"] != p["audience"] or r["policy_file"] != str(config_root / "runtime-policy.json")
+                or type(p["keys"]) is not list or len(p["keys"]) != 1
+                or type(p["permissions"]) is not list or len(p["permissions"]) != 5):
+            raise Rejected("Workspace receiver config differs from the finite renewal")
+        key = p["keys"][0]
+        if (type(key) is not dict or key.get("key_id") != issuer["key_id"] or key.get("public_key_hex") != issuer["public_key_hex"]
+                or key.get("not_before") != receipt["not_before"] or key.get("not_after") != receipt["not_after"]):
+            raise Rejected("Workspace receiver issuer differs from the retained key")
+        expected = {("runtime."+name+".v1", resource, match) for name, resource, match in (
+            ("process.draft.put", "processes/", "prefix"), ("process.publish", "processes/", "prefix"),
+            ("process.get", "processes/", "prefix"), ("version.get", "versions/", "prefix"), ("events.list", "events", "exact"))}
+        actual = set()
+        for rule in p["permissions"]:
+            closed(rule, ("subject_id", "key_id", "operation", "resource", "resource_match", "effect", "active", "not_before_ms", "not_after_ms"))
+            if (rule["subject_id"] != holder["subject_id"] or rule["key_id"] != holder["key_id"]
+                    or rule["effect"] != "allow" or rule["active"] is not True
+                    or rule["not_before_ms"] != receipt["not_before"] * 1000 or rule["not_after_ms"] != receipt["not_after"] * 1000):
+                raise Rejected("Workspace permission differs from its original finite scope")
+            actual.add((rule["operation"], rule["resource"], rule["resource_match"]))
+        if actual != expected:
+            raise Rejected("Workspace renewal changes its five operation/resource permissions")
+    _same_except(oc["wallet-command.json"], nc["wallet-command.json"], ("native_configuration", "native_configuration_sha256", "store_binding", "expected_state"))
+    _same_except(oc["command-authority.json"], nc["command-authority.json"], ("wallet_observation_pin", "native_generation", "native_sha256"))
+    _same_except(oc["command-authority.json"]["wallet_observation_pin"], nc["command-authority.json"]["wallet_observation_pin"], ("minimum_state_revision", "expected_wallet_reference_sha256"))
+    _same_except(oc["runtime-receiver.json"], nc["runtime-receiver.json"], ("policy_file",))
+    _same_except(oc["runtime-policy.json"], nc["runtime-policy.json"], ("keys", "permissions"))
+    _same_except(oc["runtime-policy.json"]["keys"][0], nc["runtime-policy.json"]["keys"][0], ("not_before", "not_after"))
+    # Ordering is retained too; a reordered grant list is not a window-only change.
+    for old_rule, new_rule in zip(oc["runtime-policy.json"]["permissions"], nc["runtime-policy.json"]["permissions"]):
+        _same_except(old_rule, new_rule, ("not_before_ms", "not_after_ms"))
+    previous.current(); profile.current()
+    return previous
+
+
+def migrate_binding(profile, value, migration_sha256):
+    previous = _migration_evidence(profile, value)
+    pin(migration_sha256)
+    selected = path(profile.value["journal"])
+    if not selected.exists():
+        raise Rejected("Workspace migration requires an existing bound journal")
+    response = {"schema":"frank.workspace-migration-result.v1", "previous_configuration_sha256":previous.config_sha256,
+        "configuration_sha256":profile.config_sha256, "migration_sha256":migration_sha256,
+        "previous_complete_sha256":value["previous_complete"]["sha256"], "renewed_complete_sha256":value["renewed_complete"]["sha256"],
+        "duplicate":False, "commands_preserved":True}
+    evidence = canonical(value).decode()
+    # Journal.__init__ is deliberately not called: it initializes schema/WAL.
+    # Rejected foreign, unbound or malformed stores must retain exact bytes.
+    with closing(sqlite3.connect(selected.as_uri()+"?mode=ro", uri=True, timeout=5)) as probe:
+        _workspace_binding(probe)
+    with closing(sqlite3.connect(selected.as_uri()+"?mode=rw", uri=True, timeout=10)) as db:
+        db.row_factory = sqlite3.Row
+        db.execute("PRAGMA synchronous=FULL")
+        with db:
+            db.execute("BEGIN IMMEDIATE")
+            current = _workspace_binding(db)
+            # Lock acquisition may wait. Re-read all pinned public inputs before
+            # the binding commit; no external authority operation occurs here.
+            _migration_evidence(profile, value)
+            _settled_workspace(db)
+            tables = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+            if current == profile.config_sha256 and "workspace_migrations" in tables:
+                row = db.execute("SELECT * FROM workspace_migrations WHERE migration_sha256=?", (migration_sha256,)).fetchone()
+                if row is not None and row["evidence"] == evidence and row["response"] == canonical(response).decode():
+                    return {**response, "duplicate":True}
+            if current != previous.config_sha256:
+                raise Rejected("Workspace migration predecessor no longer matches")
+            db.execute("CREATE TABLE IF NOT EXISTS workspace_migrations(migration_sha256 TEXT PRIMARY KEY,previous_configuration_sha256 TEXT NOT NULL,configuration_sha256 TEXT NOT NULL UNIQUE,evidence TEXT NOT NULL,response TEXT NOT NULL)")
+            db.execute("INSERT INTO workspace_migrations VALUES (?,?,?,?,?)", (migration_sha256, previous.config_sha256, profile.config_sha256, evidence, canonical(response).decode()))
+            db.execute("UPDATE workspace_binding SET configuration_sha256=? WHERE singleton=1 AND configuration_sha256=?", (profile.config_sha256, previous.config_sha256))
+    return response
+
+
+def _workspace_binding(db):
+    try:
+        if (db.execute("PRAGMA application_id").fetchone()[0] != APP_ID
+                or db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='workspace_binding'").fetchone() is None):
+            raise Rejected("Workspace migration requires an existing bound Frank journal")
+        rows = db.execute("SELECT singleton,configuration_sha256 FROM workspace_binding").fetchall()
+        if len(rows) != 1 or rows[0][0] != 1:
+            raise Rejected("Workspace binding is malformed")
+        return pin(rows[0][1])
+    except sqlite3.Error:
+        raise Rejected("Workspace binding is malformed") from None
+
+
+def _settled_workspace(db):
+    if (db.execute("SELECT 1 FROM commands WHERE state IS NOT 'observed' OR response IS NULL LIMIT 1").fetchone()
+            or db.execute("SELECT 1 FROM deliveries WHERE state IS NULL OR state NOT IN ('committed','failed_committed') LIMIT 1").fetchone()):
+        raise Rejected("Workspace has unresolved intents; reconcile before renewal")
+
+
+def renewal_ready(profile):
+    """Read-only pre-native owner preflight; never creates or configures a DB."""
+    if marker_present(profile):
+        raise CleanupUnresolved("Retained workspace ownership requires inspection")
+    selected = path(profile.value["journal"])
+    state = "absent"
+    if selected.exists():
+        db = sqlite3.connect(selected.as_uri() + "?mode=ro", uri=True, timeout=5)
+        try:
+            db.execute("BEGIN")
+            if _workspace_binding(db) != profile.config_sha256:
+                raise Rejected("Workspace renewal requires its exact bound composition")
+            _settled_workspace(db)
+            state = "bound"
+        finally:
+            db.close()
+    # Finish all blocking reads before the final cleanup/artifact observation.
+    profile.current()
+    if marker_present(profile):
+        raise CleanupUnresolved("Retained workspace ownership requires inspection")
+    return {"schema":"frank.workspace-renewal-readiness.v1", "configuration_sha256":profile.config_sha256,
+            "journal":state, "ready":True, "pending_commands":0, "cleanup_retained":False}
 
 
 def sync_directory(selected):
@@ -403,12 +646,16 @@ async def _run(args):
     if args.action == "check-config":
         return {"schema":"frank.workspace.status.v1", "configuration":"valid", "runtime_checked":False,
                 "authorization":"checked_per_request", "cleanup_retained":marker_present(profile)}
+    if args.action == "check-renewal":
+        return renewal_ready(profile)
     value = read_input(args.input, args.input_sha256)
     if args.action == "validate":
         return validate_draft(value)
     operation = Operation(profile, args.action)
     wallet = runtime = None
     try:
+        if args.action == "migrate-binding":
+            return migrate_binding(profile, value, pin(args.input_sha256))
         wallet = profile.wallet()
         runtime = OwnedRuntimeAdapter(RuntimeClient(profile.value["runtime_endpoint"], timeout=5))
         journal = Journal(profile.value["journal"])
@@ -460,10 +707,10 @@ def arguments(argv=None):
     parser.add_argument("--input-sha256")
     parser.add_argument("--wait-seconds", type=float, default=60)
     args = parser.parse_args(argv)
-    if args.action != "check-config" and not (args.input and args.input_sha256):
+    if args.action not in {"check-config", "check-renewal"} and not (args.input and args.input_sha256):
         parser.error("this action requires --input and --input-sha256")
-    if args.action == "check-config" and (args.input or args.input_sha256):
-        parser.error("check-config accepts no process input")
+    if args.action in {"check-config", "check-renewal"} and (args.input or args.input_sha256):
+        parser.error("this check accepts no process input")
     if not math.isfinite(args.wait_seconds) or not 0 < args.wait_seconds <= 120:
         parser.error("wait budget must be finite and at most120seconds")
     return parser, args
