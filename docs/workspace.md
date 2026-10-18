@@ -16,7 +16,7 @@ The closed owner-private configuration has exactly these four fields:
   "runtime_endpoint": "http://127.0.0.1:8292",
   "journal": "/absolute/private/workspace/data/frank-workspace.db",
   "wallet": {
-    "executable": "/absolute/private/workspace/native/castalia-wallet-service-authority",
+    "executable": "/absolute/private/workspace/native/castalia-wallet-service",
     "executable_sha256": "<exact admitted artifact SHA256>",
     "configuration": "/absolute/private/workspace/authority/config/wallet-command.json",
     "configuration_sha256": "<exact setup output SHA256>"

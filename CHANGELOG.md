@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- Add a native-configured empty process workspace client with exact intent recovery and composition-bound journal metadata — authoring no longer needs a review SOP, recording, executor or provider. All720 paired public-source tests pass.
+
 ### Fixed
 
 - Select the supported Python 3.12 series in macOS CI — the exact3.12.12 patch has no published ARM64 Actions build, which prevented tests from starting.
