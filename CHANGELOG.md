@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Native local review workflow and durable cleanup controls — provides the qualified Mac pilot command path while preserving sanitized public resources and pending deployment authority.
+
 ### Fixed
 - Use the public-only Native helper dependency closure in CI — preserves mandatory signature verification tests without private repository access.
 
