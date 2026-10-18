@@ -2,7 +2,8 @@
 
 A native signature authenticates a qualified issuer's assertion; this port does
 not rerun original caller evidence. The installed issuer and result producer must
-qualify separately. This library deliberately remains production-unqualified.
+qualify separately. Production composition requires the concrete pinned helper,
+current owner-controlled policy and real clock; synthetic construction is denied.
 """
 
 from __future__ import annotations
@@ -18,6 +19,7 @@ import re
 import selectors
 import stat
 import subprocess
+import threading
 import time
 from typing import Callable
 
@@ -27,6 +29,7 @@ AUDIENCE = "frank://result-receiver"
 OPERATION = "frank.result.attest.v1"
 MAX_PAYLOAD = 262144
 MAX_OUTPUT = 131072
+VERIFIER_CLOSE_SECONDS = 7
 CTX_FIELDS = frozenset(
     (
         "schema_version",
@@ -353,6 +356,10 @@ class NativeSecSHelper:
         self.executable = Path(executable)
         self.sha256 = sha256
         self.timeout = timeout
+        self._operation = threading.Lock()
+        self._owned = None
+        self._streams = []
+        self._selector = None
         if (
             not self.executable.is_absolute()
             or not _hex(sha256, 64)
@@ -376,7 +383,7 @@ class NativeSecSHelper:
                         or (info.st_mode & 0o022 and not sticky)
                     ):
                         raise _reject()
-            fd = os.open(self.executable, os.O_RDONLY | os.O_NOFOLLOW)
+            fd = os.open(self.executable, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
             try:
                 info = os.fstat(fd)
                 if (
@@ -401,62 +408,111 @@ class NativeSecSHelper:
     def artifact_binding(self):
         return (str(self.executable), self.sha256, self.timeout)
 
-    def verify(self, value):
-        self.check_available()
-        process = None
-        streams = []
+    @property
+    def cleanup_pending(self):
+        return (self._operation.locked() or self._owned is not None
+                or self._selector is not None or bool(self._streams))
+
+    def _cleanup(self):
+        # Fixed trusted verifier is a direct child, not a provider process tree.
+        # Retain every failed close/reap; a later explicit close may drain only.
+        good = True
+        if self._selector is not None:
+            try:
+                self._selector.close()
+                self._selector = None
+            except Exception:
+                good = False
+        for stream in tuple(self._streams):
+            try:
+                if not stream.closed:
+                    stream.close()
+                if stream.closed:
+                    self._streams.remove(stream)
+            except Exception:
+                good = False
+        process = self._owned
+        if process is not None:
+            if process.returncode is None:
+                try:
+                    process.kill()
+                except ProcessLookupError:
+                    pass
+                except Exception:
+                    good = False
+                try:
+                    process.wait(timeout=1)
+                except Exception:
+                    good = False
+            if process.returncode is not None and not self._streams and self._selector is None:
+                self._owned = None
+        return good and self._owned is None and not self._streams and self._selector is None
+
+    def close(self):
+        if not self._operation.acquire(blocking=False):
+            raise _reject()
         try:
+            if not self._cleanup():
+                raise _reject()
+        finally:
+            self._operation.release()
+
+    def verify(self, value):
+        if not self._operation.acquire(blocking=False):
+            raise _reject()
+        if self._owned is not None or self._streams or self._selector is not None:
+            self._operation.release()
+            raise _reject()
+        try:
+            self.check_available()
             data = json.dumps(
                 value, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False
             ).encode()
             if len(data) > 9 * 1024 * 1024:
                 raise _reject()
             process = subprocess.Popen(
-                [str(self.executable)],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                env={},
-                bufsize=0,
+                [str(self.executable)], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, env={}, bufsize=0,
             )
-            streams = [process.stdin, process.stdout, process.stderr]
+            self._owned = process
+            self._streams = [process.stdin, process.stdout, process.stderr]
             selector = selectors.DefaultSelector()
+            self._selector = selector
             deadline = time.monotonic() + self.timeout
             sent = 0
             output = bytearray()
             errors = bytearray()
-            with selector:
-                for stream, events in (
-                    (process.stdin, selectors.EVENT_WRITE),
-                    (process.stdout, selectors.EVENT_READ),
-                    (process.stderr, selectors.EVENT_READ),
-                ):
-                    os.set_blocking(stream.fileno(), False)
-                    selector.register(stream, events)
-                while selector.get_map():
-                    remaining = deadline - time.monotonic()
-                    if remaining <= 0:
-                        raise _reject()
-                    for event, _ in selector.select(min(remaining, 0.05)):
-                        stream = event.fileobj
-                        if stream is process.stdin:
-                            sent += os.write(stream.fileno(), data[sent : sent + 8192])
-                            if sent == len(data):
-                                selector.unregister(stream)
-                                stream.close()
-                        else:
-                            block = os.read(stream.fileno(), 8192)
-                            if not block:
-                                selector.unregister(stream)
-                                stream.close()
-                                continue
-                            target = output if stream is process.stdout else errors
-                            target.extend(block)
-                            if len(output) > MAX_OUTPUT or len(errors) > 4096:
-                                raise _reject()
+            for stream, events in (
+                (process.stdin, selectors.EVENT_WRITE),
+                (process.stdout, selectors.EVENT_READ),
+                (process.stderr, selectors.EVENT_READ),
+            ):
+                os.set_blocking(stream.fileno(), False)
+                selector.register(stream, events)
+            while selector.get_map():
                 remaining = deadline - time.monotonic()
-                if remaining <= 0 or process.wait(timeout=remaining) != 0 or errors:
+                if remaining <= 0:
                     raise _reject()
+                for event, _ in selector.select(min(remaining, 0.05)):
+                    stream = event.fileobj
+                    if stream is process.stdin:
+                        sent += os.write(stream.fileno(), data[sent : sent + 8192])
+                        if sent == len(data):
+                            selector.unregister(stream)
+                            stream.close()
+                    else:
+                        block = os.read(stream.fileno(), 8192)
+                        if not block:
+                            selector.unregister(stream)
+                            stream.close()
+                            continue
+                        target = output if stream is process.stdout else errors
+                        target.extend(block)
+                        if len(output) > MAX_OUTPUT or len(errors) > 4096:
+                            raise _reject()
+            remaining = deadline - time.monotonic()
+            if remaining <= 0 or process.wait(timeout=remaining) != 0 or errors:
+                raise _reject()
             self.check_available()
             value = decode_json(bytes(output))
             if (
@@ -469,13 +525,11 @@ class NativeSecSHelper:
         except (OSError, ValueError, TypeError, subprocess.SubprocessError):
             raise _reject() from None
         finally:
-            if process is not None:
-                if process.poll() is None:
-                    process.kill()
-                process.wait()
-            for stream in streams:
-                if not stream.closed:
-                    stream.close()
+            try:
+                if not self._cleanup():
+                    raise _reject()
+            finally:
+                self._operation.release()
 
 
 @dataclass(frozen=True)
@@ -555,12 +609,86 @@ class NativeResultVerifier:
 
     def __init__(self, native_helper, load_policy, *, clock=time.time):
         self.helper, self.load_policy, self.clock = native_helper, load_policy, clock
+        self._workers = set()
+
+    def require_native_sources(self, *, actor_binding=None):
+        """Read current concrete native inputs; never accept a mode-label override.
+
+        Installation/host qualification remains an operator responsibility. This
+        checks the actual pinned helper, current private public-policy loader and
+        real clock; synthetic construction stays useful only outside production.
+        """
+        if (type(self) is not NativeResultVerifier
+                or type(self.helper) is not NativeSecSHelper
+                or type(self.load_policy) is not FileReceiverPolicy
+                or self.clock is not time.time):
+            raise _reject()
+        self.helper.check_available()
+        policy = self.load_policy()
+        now = _now(self.clock())
+        current_keys = {k.key_id for k in policy.keys
+                        if k.status == "active" and k.production_authority
+                        and (k.not_before is None or k.not_before <= now)
+                        and (k.not_after is None or now < k.not_after)
+                        and (k.revoked_at is None or now < k.revoked_at)}
+        if not current_keys or not any(rule.active and rule.effect == "allow"
+                   and rule.not_before_ms <= now * 1000 < rule.not_after_ms
+                   and any(subject.subject_id == rule.subject_id
+                           and (rule.key_id is None or subject.key_id == rule.key_id)
+                           and (subject.subject_id, subject.key_id) not in policy.revoked_subject_keys
+                           and (actor_binding is None or actor_binding ==
+                                (subject.actor_id, subject.integration_id, subject.route))
+                           for subject in policy.subjects)
+                   for rule in policy.rules):
+            raise _reject()
+        # Per-result require() still evaluates exact resource and deny precedence.
+        return policy
+
+    @property
+    def cleanup_pending(self):
+        return bool(self._workers) or bool(getattr(self.helper, "cleanup_pending", False))
 
     async def verify(self, result, work):
-        # Hashing/process I/O never blocks the executor heartbeat event loop.
-        return await asyncio.to_thread(
-            self._verify, decode_json(canonical(result)), decode_json(canonical(work))
-        )
+        # Cancellation stops delivery, not the underlying thread. Keep its real
+        # lifetime observable until explicit close drains it and helper ownership.
+        if self.cleanup_pending:
+            raise _reject()
+        worker = asyncio.create_task(asyncio.to_thread(
+            self._verify, decode_json(canonical(result)), decode_json(canonical(work))))
+        self._workers.add(worker)
+        try:
+            return await asyncio.shield(worker)
+        finally:
+            if worker.done():
+                self._workers.discard(worker)
+                # Retrieve an exception even when cancellation wins the await.
+                if not worker.cancelled():
+                    worker.exception()
+
+    async def aclose(self):
+        # A bounded drain never cancels/discards a still-running worker. If the
+        # OS cannot finish cleanup, the CLI persists unresolved ownership.
+        deadline = asyncio.get_running_loop().time() + VERIFIER_CLOSE_SECONDS
+        async def drain():
+            if not self._workers:
+                return
+            done, pending = await asyncio.wait(tuple(self._workers), timeout=max(
+                0, deadline - asyncio.get_running_loop().time()))
+            for worker in done:
+                self._workers.discard(worker)
+                if not worker.cancelled():
+                    worker.exception()
+            if pending:
+                raise _reject()
+        await drain()
+        close = getattr(self.helper, "close", None)
+        if close is not None:
+            worker = asyncio.create_task(asyncio.to_thread(close))
+            self._workers.add(worker)
+            await drain()
+            worker.result()
+        if self.cleanup_pending:
+            raise _reject()
 
     def _verify(self, result, work):
         try:
@@ -686,7 +814,7 @@ class FileReceiverPolicy:
             info = self.path.parent.lstat()
             if info.st_uid != os.getuid() or info.st_mode & 0o077:
                 raise _reject()
-            fd = os.open(self.path, os.O_RDONLY | os.O_NOFOLLOW)
+            fd = os.open(self.path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
             info = os.fstat(fd)
             if (
                 not stat.S_ISREG(info.st_mode)

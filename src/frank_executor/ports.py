@@ -26,6 +26,12 @@ class CallAuthority(Protocol):
     async def evidence(self, envelope: bytes) -> bytes: ...
 
 
+class ResumableCallAuthority(CallAuthority, Protocol):
+    """Optional no-create recovery selected only by explicit saved-command replay."""
+
+    async def resume_evidence(self, envelope: bytes) -> bytes: ...
+
+
 class ResultVerifier(Protocol):
     mode: str
 

@@ -10,7 +10,6 @@
 | Adapter configuration and actor route | Frank deployment configuration | Explicit plugin registry and capability/resource declarations |
 | Runtime command authorization | Existing native secS/receiver policy | Injected proof callback; runtime verifies every call |
 | Build pins, version admission, credentials and rollout | Hub | Frank supplies artifacts, health and CLI contract |
-| Canonical implementation work graph | Devgraph | No runtime object storage or direct graph writes |
 
 The async client boundary in `ports.py` is implemented by a wrapper around the generated synchronous public SDK using `asyncio.to_thread`. Public `command_envelope` generates resource identity; no prefix inference in Frank substitutes for runtime receiver descriptors. Local JSON schema checks catch wire skew before a malformed response becomes observed evidence. Public errors preserve code/retryability; uncertain results remain pending. Neither a stale version nor a timeout causes automatic rebase or a new idempotency key.
 

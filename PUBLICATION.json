@@ -1,6 +1,13 @@
 {
   "schema": "zenith.public-component-baseline.v1",
-  "source_revision": "844ee8e942b76bf53ef5311c1c738d07c0ced28c",
+  "source_revision": "58e30368cb678d445b979fcd94f3f3dfd23f04a4",
   "source_history_imported": false,
-  "notice": "NOTICE.public-baseline.md"
+  "notice": "NOTICE.public-baseline.md",
+  "functional_source_exceptions": {
+    "src/frank_review_adapter/resource_origin.py": [
+      "personal-review-v1.migration.json",
+      "personal-review-legacy.md"
+    ]
+  },
+  "exception_reason": "Retain existing public hashes for de-identified Runtime resources; all other package source bytes match the source revision."
 }

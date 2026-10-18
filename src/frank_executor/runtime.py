@@ -99,6 +99,9 @@ class RuntimeGateway:
         return await self.send(envelope, guard=guard)
 
     async def send(self, envelope, *, guard=None):
+        return await self._send(envelope, guard=guard, resume=False)
+
+    async def _send(self, envelope, *, guard, resume):
         envelope = json.loads(canonical(envelope))
         self.validate(envelope, "command")
         self.journal.command(envelope)
@@ -107,8 +110,13 @@ class RuntimeGateway:
         guarded = getattr(self.client, "command_guarded", None)
         if guard is not None and not callable(guarded):
             raise Rejected("Native terminal transport does not support guarded dispatch")
-        # Obtain fresh authority even for an exact runtime retry. Never cache credentials.
-        evidence = await self.authority.evidence(canonical(envelope))
+        # Replay explicitly selects no-create recovery when the authority supports it.
+        # Existing generic authorities retain their original evidence contract.
+        acquire = (getattr(self.authority, "resume_evidence", self.authority.evidence)
+                   if resume else self.authority.evidence)
+        if not callable(acquire):
+            raise Rejected("Authority command recovery is unavailable")
+        evidence = await acquire(canonical(envelope))
         try:
             if guard is None:
                 if self.journal.command_requires_admission(envelope):
@@ -133,8 +141,8 @@ class RuntimeGateway:
         return response
 
     async def replay(self, request_id, *, guard=None):
-        return await self.send(
-            json.loads(self.journal.saved_command(request_id)["body"]), guard=guard
+        return await self._send(
+            json.loads(self.journal.saved_command(request_id)["body"]), guard=guard, resume=True
         )
 
     async def query(self, operation, payload):

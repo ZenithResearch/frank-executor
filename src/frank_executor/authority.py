@@ -48,10 +48,14 @@ def check_authority(environment, authority, result_verifier):
     if environment == "production":
         from .native_results import NativeResultVerifier
 
-        # This built-in port has no installed artifact-chain admission mechanism.
-        # A caller must not qualify it by changing a mode label.
         if isinstance(result_verifier, NativeResultVerifier):
-            raise Rejected("Native result verification requires installed artifact qualification")
+            from .wallet_authority import WalletCallAuthority
+            if type(authority) is not WalletCallAuthority:
+                raise Rejected("Native local review requires pinned Wallet authority")
+            # Inspect real sources, never mutable mode labels or qualification flags.
+            authority.check_available()
+            result_verifier.require_native_sources()
+            return
     if environment == "production" and (
         authority.mode != "secs_verified" or result_verifier.mode != "secs_verified"
     ):

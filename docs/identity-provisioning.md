@@ -1,13 +1,30 @@
-# ADR: dedicated Frank execution identity
+# Dedicated Frank execution identity
 
-Status: identity/custody decision approved; native provisioning and production qualification incomplete.
+Command authority and result-party authority are distinct native roles. An operator,
+Matrix account or provider identity does not substitute for either. This repository
+contains no live subject/key allocation, private key, grant or provisioning output.
 
-The approved direction is a dedicated, stable Frank service identity with native file custody, rather than borrowing an operator or Matrix identity. No exact subject ID, key ID or key material has been provisioned for this implementation. Those identifiers remain unassigned. The source does not manufacture a seed, generic signer, Wallet flow, Dregg capability or alternate authentication system.
+`WalletCallAuthority` sends exact canonical Runtime command bytes through the fixed
+normal Wallet command with pinned executable and same-read configuration hashes.
+New commands use `issue`; explicit saved-command recovery uses `resume` without
+creation or window extension. Eight closed Runtime read operations use fresh
+`query` authority. Runtime independently validates native signatures, current
+subject/key/descriptor permissions, time and replay.
 
-`CallAuthority.evidence(canonical_envelope_bytes)` is a host-injected port to the existing native secS signer/authority flow. The proof covers exact audience, operation, resource, request digest and freshness/replay context as defined by the runtime's receiver-local descriptors. Frank uses the public SDK resource generator, obtains fresh authority for every call (including exact command retry), and sends proof bytes only to the public runtime client. The runtime independently authenticates the native subject/key and authorizes its exact receiver-local permission before mutation. Matrix bearer tokens and account/room identity cannot satisfy this boundary.
+`NativeResultVerifier` is a separate result boundary. It verifies the retained
+work/body/context and current receiver policy. The separate closed local-review
+profile requires concrete pinned native components and actual system time;
+synthetic dependencies and the original CLI remain production-denied. A mode
+label, receipt string or content hash is not proof that software ran.
 
-`ResultVerifier.verify(result, retained_work)` is a separate host-injected native verification port. Provider provenance alone cannot authorize claimed output. No qualified native implementation is shipped here. The default ports deny all calls/results. Production construction rejects unqualified/local-dev modes; the shipped CLI consequently cannot execute in production. A trusted composition layer may inject qualified native ports only after native fixture and negative-path review; setting a Python mode label is not cryptographic evidence, and receiver verification remains mandatory.
+The local-review result party takes responsibility for the exact captured
+computation and evidence under its current assignment. Native owns leased key
+custody and signing. Frank never receives seeds or generic signing APIs.
 
-The only executable authority helper is a wrapper around the public runtime SDK's explicitly named `local_dev_untrusted` helper. Frank requires environment test/development and explicit configuration opt-in; the runtime must independently enable that mode. It is denied in production. Fixture tests of revoked, expired, replayed, wrong-audience/operation/resource and Matrix-only rejection exercise the port boundary and are not a substitute for native proof verification.
-
-Before production admission: provision the approved stable subject through the qualified native identity path; assign least-privilege exact executor/query descriptors to the native key; supply a native result verifier; test revocation, expiry, replay, wrong bindings, rotation and audit evidence end to end. Rotation must preserve the subject while native receiver policy retires the old key and permits the replacement; never rewrite historical attempt/effect evidence or reactivate an old fence. Exact native rotation commands are intentionally unspecified until the native API path is qualified. Hub owns custody mounting and rollout without reading private key material into ordinary application configuration.
+Before activation, qualify the exact installed command/result/helper/Runtime tuple,
+select finite descriptors and resources, and exercise revocation, expiry, replay,
+wrong bindings, original-window recovery and result renewal. Rotation must preserve
+historical Attempt/effect evidence and retired fences. Real input is selected
+explicitly: typed text is not audio and supplied transcript evidence is not a claim
+that STT ran. Hub owns deployment composition without copying key material into
+ordinary application configuration.

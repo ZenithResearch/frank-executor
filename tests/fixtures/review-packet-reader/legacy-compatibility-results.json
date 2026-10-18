@@ -72,13 +72,13 @@
       "case_id": null,
       "feedback_item_count": 1,
       "files_to_inspect_first": [
-        "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+        "/example/review-fixture/codebase/view.tsx"
       ],
       "implementation_task_count": 1,
       "must_fix_before_delegation": [],
       "packet_status": "review_packet_ready",
       "recommended_first_files": [
-        "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+        "/example/review-fixture/codebase/view.tsx"
       ],
       "review_id": null,
       "source_binding_statuses": [
@@ -96,13 +96,13 @@
       "case_id": null,
       "feedback_item_count": 1,
       "files_to_inspect_first": [
-        "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+        "/example/review-fixture/codebase/view.tsx"
       ],
       "implementation_task_count": 1,
       "must_fix_before_delegation": [],
       "packet_status": "review_packet_ready",
       "recommended_first_files": [
-        "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+        "/example/review-fixture/codebase/view.tsx"
       ],
       "review_id": null,
       "source_binding_statuses": [

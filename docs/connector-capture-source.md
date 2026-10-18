@@ -1,20 +1,9 @@
 # Unsigned connector capture candidate
 
-Historical authoring status (2026-10-15): this candidate was authored as source
-only, before import, parsing, lint, tests, build or installation. Independent
-source review and a separate validation release were required before execution.
-
-Current validation status (2026-10-15): independent and root review accepted
-55 targeted source-overlay test cases: 42 new capture cases and 13 selected
-legacy cases, with all 165 setup/call/teardown reports passed and both phases
-returning zero. The accepted actual root is
-`/example/operator/repos/process-execution-evidence/2026-10-14/frank-unsigned-capture-storage-poll-actual-reviewed/manifest.json`,
-SHA-256 `18e2f75b37eeee9931d0a32910cf61f72c7cea1efe7ac72f7d1c3542243e76c4`.
-This is targeted source evidence, not a full-suite, installed-candidate, native
-authority or production qualification. The run observed zero live storage
-sidecar disappearances, so it provides no coverage of that sampler tolerance
-branch. This candidate allocates no identity, opcode, issuer API, grant or
-native role, and earns no gate.
+This library retains original unsigned connector observations while withholding
+terminal output until an appropriate result issuer is available. Public tests
+exercise its source behavior; private review receipts are not public qualification.
+No identity, opcode, grant or live native role is created by this module.
 
 The trusted host may pass a `ConnectorCapture` to one Matrix or Hermes adapter,
 or supply the same dependency by integration ID to `configured_registry` during
@@ -106,9 +95,7 @@ part of this candidate.
 
 ## Validation scope
 
-At authoring, `tests/test_connector_capture.py` and the regression selection were
-unexecuted. The accepted source run now passes all 42 capture cases and the 13
-selected legacy cases described above. The capture cases cover complete
+The public capture tests are separate from installed authority qualification. The capture cases cover complete
 normalized payload equality, field/correlation and size rejection, whole-page
 framing before capture, plain-room changes, mutation across awaits, proof-mode
 separation, idempotent/concurrent/conflicting records, batch rollback, retained
@@ -116,6 +103,6 @@ digest checks, no local-dev/Runtime/cursor/native replay escape, Hermes cross-
 instance reservation, malformed/cancelled outcomes and two fixed synthetic
 child-process deaths before factory completion and after capture commit.
 
-These selected passes do not establish a full adapter, journal, native-result
+These source tests do not by themselves establish a full adapter, journal, native-result
 or SOP/comparison suite result. Broader source and installed validation require
 their own release and evidence. No native signing positive is claimed.

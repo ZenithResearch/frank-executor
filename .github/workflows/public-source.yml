@@ -4,7 +4,7 @@ permissions:
   contents: read
 jobs:
   source:
-    runs-on: ubuntu-24.04
+    runs-on: macos-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -28,5 +28,5 @@ jobs:
         shell: bash
         run: |
           export FRANK_NATIVE_VERIFIER="$GITHUB_WORKSPACE/runtime-source/native/secs-verifier/target/release/process-runtime-secs-verifier"
-          export FRANK_NATIVE_VERIFIER_SHA256="$(sha256sum "$FRANK_NATIVE_VERIFIER" | cut -d ' ' -f 1)"
+          export FRANK_NATIVE_VERIFIER_SHA256="$(shasum -a 256 "$FRANK_NATIVE_VERIFIER" | cut -d ' ' -f 1)"
           PYTHONPATH=src python -m pytest -q --basetemp="$RUNNER_TEMP/frank-tests"

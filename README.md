@@ -1,47 +1,68 @@
 # Frank executor
 
-Frank is an independently runnable executor for the public process-runtime v1 contract. It registers configured actors, asks the runtime for eligible work, claims an exact item, and sends a bounded work packet through a configured integration. The runtime owns published definitions, DAG readiness, Attempts, fences, leases, retries, recovery, outputs and receipts. Frank never opens a runtime database or imports runtime implementation modules.
+Frank executes work offered by the public process-runtime v1 API. Runtime owns
+published definitions, DAG readiness, Attempts, fences, leases, retries, outputs
+and receipts. Frank has its own delivery/capture journal and imports only the
+public Runtime client; it never opens the Runtime database.
 
-This implementation is local preparation for review. **Production execution defaults to deny.** The dedicated Frank identity decision is approved, but no native subject/key has been provisioned or qualified. See [identity decision](docs/identity-provisioning.md). Local development requires explicit untrusted opt-in on both Frank and the runtime.
+The original `frank-executor` CLI defaults to denied production authority. The
+separate `frank-local-review` entrypoint supports a closed, owner-pinned native
+composition on macOS Python3.12. Source publication does not provision an identity,
+grant permission, select review input, enable providers or qualify an installation.
 
 ## Install and verify
 
-Use Python 3.12 and a reviewed `process-runtime==0.1.0` distribution containing the public `process_runtime_client` package. The SDK is co-packaged in that distribution for this initial release; Frank imports only the public client package. For isolated sibling checkouts:
+Use Python3.12 and the matching public `process-runtime==0.1.0` distribution, which
+includes `process_runtime_client`. For reviewed sibling source checkouts:
 
 ```sh
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -e ../process-runtime -e '.[test]'
-.venv/bin/python -m pytest -q --basetemp=/example/tmp/frank-owned-tests
+.venv/bin/python -m pytest -q --basetemp="${TMPDIR:-/tmp}/frank-owned-tests"
 ```
 
-Tests start a disposable runtime process on loopback and use the public HTTP client. They do not read its database. Matrix responses and the Hermes interface are deterministic fixtures; tests make no live provider calls. [Verification scope](docs/verification.md) separates tested behavior from deployment gates.
+The full suite requires macOS kqueue/NOTE_EXIT and an actual verification-only
+Native helper with a recorded source/artifact digest. See
+[verification](docs/verification.md). Tests use disposable stores, loopback Runtime
+and fake providers. Synthetic process output is not Native signature evidence.
+Private qualification logs are not part of this public repository.
 
-## Bounded command-line execution
+## Execution and recovery
 
-Copy [the development example](examples/frank.local.json) to a local configuration, choose a Frank-only journal path, and configure installed adapters. Paths and secrets are deployment inputs. Matrix credentials are references resolved only inside its adapter; Hermes follows its existing native credential setup.
+The default development configuration requires explicit untrusted opt-in in both
+Frank and Runtime. It cannot be used as production authority:
 
 ```sh
 frank-executor check-config --config ./frank.json
 frank-executor health --config ./frank.json
 frank-executor register --config ./frank.json --actor frank-local
 frank-executor work --config ./frank.json --actor frank-local
-frank-executor execute --config ./frank.json --actor frank-local \
-  --run-id RUN_ID --step-id STEP_ID --operation compute --scope answer \
-  --lease-ms 120000 --wait-seconds 60
 ```
 
-`execute` accepts one explicit runtime-returned work item. It does not infer dependencies, create another Attempt, republish definitions, or retry providers. It renews the current lease while delivery and result polling are active. A verified successful result goes through runtime output validation and atomic completion. A Matrix send acknowledgement remains pending. A timeout or failed heartbeat stops local processing and requests advisory adapter cancellation; this cannot prove an external effect stopped.
+The [native local-review profile](docs/local-review-installed-profile.md) binds
+exact Wallet command, result-attester and verification helper artifacts, same-read
+configuration hashes and current receiver policy. No generic signer, raw-key flag,
+qualification token or local-development fallback is accepted. It supports fixed
+`initialize`, `next`, `inspect`, `resume`, `renew` and `export` actions. `next` selects
+only actual Runtime-offered work. Export requires the committed output, receipt and
+artifact bytes to correlate. The retained cleanup marker blocks reentry until all
+owned native workers, children and pipes resolve; it grants no future kill authority.
 
-`check-config` performs static validation. `health` connects adapters, checks protocol capabilities and provider identity, reports liveness, configuration validity, adapter readiness and authority mode, then closes them. `authority: adapter_required` sets `ready: false` even when `adapter_ready: true`; it is a production admission failure. The shipped CLI has no native authority loader and therefore cannot execute production commands.
+[Wallet call authority](docs/wallet-call-authority.md) separates new commands from
+explicit no-create saved-command recovery and fresh queries.
+[Local result production](docs/local-review-result-producer.md) retains computation
+and port evidence before attest/resume/renew; proof renewal never reruns the handler.
+The independent [result verifier](docs/native-result-authority-v1.md) checks native
+proofs and current policy again before admission and terminal dispatch.
 
-See [operation and recovery](docs/operations.md), [adapter contract](docs/integration-adapter-v1.md), and [ownership](docs/architecture.md). Hub owns deployment composition, credentials delivery, probes, version admission and rollout. The Dockerfile expects a reviewed offline wheel directory; no image build or deployment has been qualified here.
-
-Native result verification, exact payload profile, durable replay/renewal and dispatch/cursor guards are described in [docs/native-result-authority-v1.md](docs/native-result-authority-v1.md). These implemented libraries remain production-unqualified; supported native issuer/provisioning and accountable normalized-result attestation still require installed qualification.
+Read [operation and recovery](docs/operations.md), [adapter contracts](docs/integration-adapter-v1.md)
+and [ownership](docs/architecture.md) for the limits. The Dockerfile remains a generic
+offline packaging example; it does not provide macOS native-process qualification.
 
 ## Public deployment
 
-Use the [Zenith Hub lightweight deployer](https://github.com/ZenithResearch/zenith-hub-lightweight)
-for the shared Apple-silicon Mac installer and operator UI. Component source lives
-under [ZenithResearch](https://github.com/ZenithResearch). Installation does not
-provision native identities, grant command authority, or enable external effects.
-See `NOTICE.public-baseline.md` for the scope of this clean publication.
+The [Zenith Hub lightweight deployer](https://github.com/ZenithResearch/zenith-hub-lightweight)
+owns the shared Mac installer/operator UI. Its installation and native activation
+are separate. See [publication scope](NOTICE.public-baseline.md): private histories,
+credentials, work records and live data are not imported, and public availability
+does not grant a new project reuse license.

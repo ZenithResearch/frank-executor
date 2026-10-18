@@ -65,8 +65,8 @@
       "kind": "legacy",
       "origin": "demonstration:legacy-source-available-step_7.json",
       "reference": {
-        "byte_length": 9265,
-        "content_hash": "e760314680e0fd85c574276f37b92f14b0fb823546366d3dd8499d1dc1bdd90d",
+        "byte_length": 8698,
+        "content_hash": "798e3ca40dcb0edcb9f9020dfcb2bf16d967833a19f911192d4f04adde593761",
         "media_type": "application/json"
       },
       "scenario": "source-available",

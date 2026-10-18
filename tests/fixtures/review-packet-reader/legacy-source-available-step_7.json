@@ -104,7 +104,7 @@
   ],
   "implementation_handoff": {
     "files_to_inspect_first": [
-      "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+      "/example/review-fixture/codebase/view.tsx"
     ],
     "implementation_tasks": [
       {
@@ -136,14 +136,14 @@
         },
         "feedback_item_id": "fb_001",
         "files_to_inspect_first": [
-          "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+          "/example/review-fixture/codebase/view.tsx"
         ],
         "open_questions": [],
         "primary_files": [
-          "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+          "/example/review-fixture/codebase/view.tsx"
         ],
         "problem": "The referenced UI element is not centered.",
-        "recommended_first_file": "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx",
+        "recommended_first_file": "/example/review-fixture/codebase/view.tsx",
         "reviewer_quote": "This button is not centered.",
         "selectors": [
           "button.review-dismiss"
@@ -153,7 +153,7 @@
         "source_references": [
           {
             "lines": "1-3",
-            "path": "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx",
+            "path": "/example/review-fixture/codebase/view.tsx",
             "reason": "selector/token 'review-dismiss' matched view.tsx:1",
             "relative_path": "view.tsx",
             "selector": "review-dismiss"
@@ -220,19 +220,19 @@
       "confidence": "high",
       "feedback_item_id": "fb_001",
       "files_to_inspect_first": [
-        "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+        "/example/review-fixture/codebase/view.tsx"
       ],
       "likely_cause": null,
       "open_questions": [],
       "primary_files": [
-        "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx"
+        "/example/review-fixture/codebase/view.tsx"
       ],
       "reason": "source binding verified from local codebase references",
-      "recommended_first_file": "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx",
+      "recommended_first_file": "/example/review-fixture/codebase/view.tsx",
       "references": [
         {
           "lines": "1-3",
-          "path": "/private/var/folders/yx/nh1709b124jgjrw1k3bydds80000gn/T/legacy-review-shadow-8jbjt28k/codebase/view.tsx",
+          "path": "/example/review-fixture/codebase/view.tsx",
           "reason": "selector/token 'review-dismiss' matched view.tsx:1",
           "relative_path": "view.tsx",
           "selector": "review-dismiss"
