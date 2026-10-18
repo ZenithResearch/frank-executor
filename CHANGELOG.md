@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Select the supported Python 3.12 series in macOS CI — the exact3.12.12 patch has no published ARM64 Actions build, which prevented tests from starting.
+
 ### Added
 
 - Native local review workflow and durable cleanup controls — provides the qualified Mac pilot command path while preserving sanitized public resources and pending deployment authority.

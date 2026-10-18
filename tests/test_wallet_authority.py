@@ -17,6 +17,7 @@ from process_runtime_client import RuntimeClient, command_envelope
 DENIAL = "Native Wallet call authority unavailable"
 ENVELOPE = b'{"packet_hex":"00","schema":"runtime.secs-envelope.v1","signed_context_hex":"00"}'
 QUERY_PAYLOADS = {
+    "process.get": {"process_id": "process"},
     "work.list": {"actor_id": "actor", "limit": 1},
     "events.list": {"after": 0, "limit": 1},
     "attempt.get": {"run_id": "run", "step_id": "step", "attempt_id": "attempt"},
@@ -134,7 +135,7 @@ def test_only_accepted_query_profiles_select_query_mode(tmp_path, operation, pay
 
 
 @pytest.mark.parametrize("raw", [
-    canonical({"schema":"runtime.query.v1","operation":"process.get","payload":{"process_id":"p"}}),
+    canonical({"schema":"runtime.query.v1","operation":"process.get","payload":{"process_id":"p","extra":True}}),
     canonical({"schema":"runtime.query.v1","operation":"effect.get","payload":{"effect_id":"e"}}),
     b'{"schema":"runtime.command.v1"}', b'{}', b'[]',
     b'{"schema":"runtime.query.v1","schema":"runtime.query.v1"}',

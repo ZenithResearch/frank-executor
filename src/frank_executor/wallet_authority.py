@@ -22,7 +22,7 @@ from .model import Rejected, canonical, decode_json
 from .runtime import ContractValidator
 
 QUERY_OPERATIONS = frozenset({
-    "work.list", "events.list", "attempt.get", "output.get", "run.get",
+    "process.get", "work.list", "events.list", "attempt.get", "output.get", "run.get",
     "artifact.get", "version.get", "receipt.get",
 })
 MAX_EXECUTABLE_BYTES = 64 * 1024 * 1024

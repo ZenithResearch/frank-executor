@@ -20,7 +20,7 @@ The only subprocess arguments are:
 <fixed executable> resume --config <fixed private configuration> --config-sha256 <fixed SHA256>
 ```
 
-Runtime command schema selects issue. Runtime query schema selects query only for this closed existing reader set: work.list, events.list, attempt.get, output.get, run.get, artifact.get, version.get, receipt.get. All other schemas/queries deny before spawn. This is parsing support, not a permission grant: Native and the Runtime receiver independently apply their exact finite subject/descriptor/resource permissions. process.get/effect.get have current schema support but no current Frank call site and remain outside this selection.
+Runtime command schema selects issue. Runtime query schema selects query only for this closed reader set: process.get, work.list, events.list, attempt.get, output.get, run.get, artifact.get, version.get, receipt.get. All other schemas/queries deny before spawn. The additive generic workspace client uses process.get to read current drafts; it requires the matching explicit Native/Wallet query admission. This is parsing support, not a permission grant: Native and the Runtime receiver independently apply their exact finite subject/descriptor/resource permissions. effect.get remains outside this selection.
 
 The new Wallet query mode must use the separately reviewed `acquire_query(raw)`/`complete_query(raw, proof)` APIs to produce fresh evidence for each new read. No query body field, request ID or resource is added. Losing a query response leaves the caller's cursor unchanged; another explicit poll invokes query again. The adapter neither retries automatically nor falls back to issue/resume. New command sends use issue. Explicit RuntimeGateway.replay retrieves the exact saved command and selects the optional resume_evidence method; WalletCallAuthority maps that method only to resume. Native issue rejects an existing Completed row: it is not a recovery API. Resume reads the existing Pending/Completed row without creation or renewal. Missing, expired, changed or ambiguous recovery denies. Queries cannot select resume, and an issue denial never triggers resume or query. Generic authorities that lack resume_evidence retain their existing evidence method; an advertised non-callable recovery method denies. The original command body/request ID/version and authority window remain unchanged. Expired command recovery stays a domain decision.
 
@@ -59,7 +59,7 @@ Commands lacking those interfaces deny without fallback. Finite command journal
 capacity must be selected explicitly; this source does not expand it implicitly.
 
 The tests cover actual owned fake-process stdin/argv and public SDK framing,
-all eight query routes, input/pin/envelope rejection, timeout/cancellation,
+all nine selected query routes, input/pin/envelope rejection, timeout/cancellation,
 stateful Completed-row recovery, Mac gate ordering, descendant/pipe handling,
 cleanup faults, exact zombie census and reentry denial. Synthetic hex is not
 Native evidence. Run these tests on macOS Python3.12; then exercise the actual

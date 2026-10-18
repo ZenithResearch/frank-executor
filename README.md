@@ -2,13 +2,21 @@
 
 Frank executes work offered by the public process-runtime v1 API. Runtime owns
 published definitions, DAG readiness, Attempts, fences, leases, retries, outputs
-and receipts. Frank has its own delivery/capture journal and imports only the
-public Runtime client; it never opens the Runtime database.
+and receipts. Frank has its own delivery/capture journal and uses the public Runtime client
+for canonical data. Workspace validation delegates to Runtime's pure compiler;
+Frank never opens the Runtime database.
 
 The original `frank-executor` CLI defaults to denied production authority. The
 separate `frank-local-review` entrypoint supports a closed, owner-pinned native
 composition on macOS Python3.12. Source publication does not provision an identity,
 grant permission, select review input, enable providers or qualify an installation.
+
+The additive [generic workspace client](docs/workspace.md), `frank-workspace`,
+supports an initially empty native-configured workspace: generic draft validation,
+creation/editing, publication and current process reads. It requires no review,
+audio, capture, result party, actor or Run. Runtime owns the canonical records;
+Frank retains only exact client intent and acknowledgements. Validation delegates
+to Runtime's installed pure compiler. Optional workflow selection stays separate.
 
 ## Install and verify
 
