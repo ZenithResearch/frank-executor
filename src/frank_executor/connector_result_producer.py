@@ -14,9 +14,19 @@ from .wallet_authority import _PinnedCommand
 
 
 class _ConnectorResultCommand(_PinnedCommand):
-    def __init__(self, *, journal, connector_policy_sha256, **profile):
+    def __init__(
+        self,
+        *,
+        journal,
+        connector_policy_sha256,
+        authority_configuration,
+        authority_configuration_sha256,
+        **profile,
+    ):
         self._journal = str(Path(journal))
         self._policy_sha256 = connector_policy_sha256
+        self._authority_configuration = str(Path(authority_configuration))
+        self._authority_configuration_sha256 = authority_configuration_sha256
         super().__init__(**profile)
 
     def _check_profile(self):
@@ -24,10 +34,20 @@ class _ConnectorResultCommand(_PinnedCommand):
         value = decode_json(raw)
         if (
             type(value) is not dict
-            or set(value) != {"schema", "journal", "connector_policy_sha256"}
+            or set(value)
+            != {
+                "schema",
+                "journal",
+                "connector_policy_sha256",
+                "authority_configuration",
+                "authority_configuration_sha256",
+            }
             or value["schema"] != "frank.connector-result-producer.v1"
             or value["journal"] != self._journal
             or value["connector_policy_sha256"] != self._policy_sha256
+            or value["authority_configuration"] != self._authority_configuration
+            or value["authority_configuration_sha256"]
+            != self._authority_configuration_sha256
         ):
             raise Rejected("Native configuration selects another connector capture")
         return raw
@@ -57,6 +77,8 @@ class ConnectorResultProducer:
         executable_sha256,
         configuration,
         configuration_sha256,
+        authority_configuration,
+        authority_configuration_sha256,
         timeout=5,
     ):
         if type(capture) is not ConnectorCapture or not callable(getattr(claims, "check", None)):
@@ -71,6 +93,8 @@ class ConnectorResultProducer:
             timeout=timeout,
             journal=capture.journal.path,
             connector_policy_sha256=retained_policy,
+            authority_configuration=authority_configuration,
+            authority_configuration_sha256=authority_configuration_sha256,
         )
 
     async def _original(self, work):

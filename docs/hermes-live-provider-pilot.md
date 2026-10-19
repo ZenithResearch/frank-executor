@@ -18,9 +18,10 @@ external tool effect. The model inference itself is the only external send.
    prompt, final response, normalized result and source provenance before any
    result can escape the adapter.
 4. A pinned native connector-result producer reopens the owner-private Frank
-   journal, validates the immutable selector and capture bytes, and issues a
-   short-lived `frank.result.attest.v1` envelope for the exact Attempt, fence,
-   effect, actor, integration, route and normalized result.
+   journal, validates the immutable selector, capture bytes and nested native
+   authority configuration pin, and issues a short-lived
+   `frank.result.attest.v1` envelope for the exact Attempt, fence, effect,
+   actor, integration, route and normalized result.
 5. Frank's independent native verifier admits that envelope. Runtime then
    independently authenticates each observe and complete command and commits
    the typed output.
@@ -62,7 +63,7 @@ independent verifier remains the only source of `NativeResultAdmission`.
 
 ## Remaining installation work
 
-- Implement and independently review the native helper's
+- Complete independent review and installed qualification of the implemented
   `frank.connector-result-producer.v1` journal reader and selector validation.
 - Expand the existing Frank receiver grant through a new explicit owner plan;
   same-scope renewal cannot add executor operations.

@@ -65,6 +65,8 @@ def producer_for(tmp_path, capture, work):
         executable_sha256="a" * 64,
         configuration=tmp_path / "never-read-native-connector-config",
         configuration_sha256="b" * 64,
+        authority_configuration=tmp_path / "never-read-result-authority-config",
+        authority_configuration_sha256="c" * 64,
     )
     calls = []
     outputs = {}
@@ -170,6 +172,14 @@ def test_connector_selector_and_native_config_share_one_closed_schema(tmp_path):
         "schema": "frank.connector-result-producer.v1",
         "journal": capture.journal.path,
         "connector_policy_sha256": selector["policy_sha256"],
+        "authority_configuration": str(tmp_path / "result-authority.json"),
+        "authority_configuration_sha256": "c" * 64,
     })
+    with pytest.raises(ValidationError):
+        validator.validate({
+            "schema": "frank.connector-result-producer.v1",
+            "journal": capture.journal.path,
+            "connector_policy_sha256": selector["policy_sha256"],
+        })
     with pytest.raises(ValidationError):
         validator.validate({**selector, "trusted": True})

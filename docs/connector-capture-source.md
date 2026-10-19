@@ -85,9 +85,10 @@ Frank's producer orchestration persists a closed
 body, native payload, connector policy, provenance, original response, integration,
 event and Runtime effect resource. It supports an initial `attest`, exact-selector
 `resume` and exact-parent `renew`, with at most four exchanges per effect. The
-selector grants no authority. The pinned native helper must independently reopen
-the selected owner-private journal, validate all referenced capture bytes and
-issue the result envelope. Frank then requires `NativeResultAdmission` from its
+selector grants no authority. The pinned native helper independently reopens
+the selected owner-private journal, validates all referenced capture bytes and
+the nested native authority configuration pin, and issues the result envelope.
+Frank then requires `NativeResultAdmission` from its
 independent verifier before the adapter can return the proved result.
 
 `ConnectorCapture.retained` is an internal evidence read. It rechecks work,
