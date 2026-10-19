@@ -47,6 +47,7 @@ class Journal:
             CREATE TABLE IF NOT EXISTS connector_dispatch(effect_key TEXT PRIMARY KEY,work_sha256 TEXT NOT NULL,policy TEXT NOT NULL,prompt_sha256 TEXT NOT NULL);
             CREATE TABLE IF NOT EXISTS connector_captures(effect_key TEXT PRIMARY KEY,work_sha256 TEXT NOT NULL,policy TEXT NOT NULL,body TEXT NOT NULL,body_sha256 TEXT NOT NULL,payload_sha256 TEXT NOT NULL,resource TEXT NOT NULL,provenance TEXT NOT NULL,provenance_sha256 TEXT NOT NULL,original TEXT NOT NULL,original_sha256 TEXT NOT NULL,integration_id TEXT NOT NULL,event_id TEXT NOT NULL,UNIQUE(integration_id,event_id));
             CREATE TABLE IF NOT EXISTS connector_rejected_ingress(effect_key TEXT PRIMARY KEY,work_sha256 TEXT NOT NULL,policy TEXT NOT NULL,body TEXT NOT NULL,provenance TEXT NOT NULL,original TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS connector_result_exchange(id INTEGER PRIMARY KEY AUTOINCREMENT,effect_key TEXT NOT NULL,selector_sha256 TEXT NOT NULL,selector BLOB NOT NULL,mode TEXT NOT NULL,renewal_of TEXT,envelope BLOB,UNIQUE(effect_key,selector_sha256));
             """
             for statement in statements.split(";"):
                 if statement.strip():

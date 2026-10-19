@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zenithresearch.org/contracts/frank/connector-result-selector-v1.schema.json",
+  "title": "Frank native connector-result producer contract",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "identity": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "effect_key",
+        "work_sha256",
+        "body_sha256",
+        "payload_sha256",
+        "resource",
+        "policy_sha256",
+        "provenance_sha256",
+        "original_sha256",
+        "integration_id",
+        "event_id",
+        "renewal_of"
+      ],
+      "properties": {
+        "schema": {"const": "frank.connector-result-selector.v1"},
+        "effect_key": {"$ref": "#/$defs/identity"},
+        "work_sha256": {"$ref": "#/$defs/sha256"},
+        "body_sha256": {"$ref": "#/$defs/sha256"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "resource": {"type": "string", "pattern": "^runs/[^/]+/steps/[^/]+/attempts/[^/]+/effects/[^/]+$", "maxLength": 4096},
+        "policy_sha256": {"$ref": "#/$defs/sha256"},
+        "provenance_sha256": {"$ref": "#/$defs/sha256"},
+        "original_sha256": {"$ref": "#/$defs/sha256"},
+        "integration_id": {"$ref": "#/$defs/identity"},
+        "event_id": {"$ref": "#/$defs/identity"},
+        "renewal_of": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/sha256"}
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "journal", "connector_policy_sha256"],
+      "properties": {
+        "schema": {"const": "frank.connector-result-producer.v1"},
+        "journal": {"type": "string", "pattern": "^/", "maxLength": 4096},
+        "connector_policy_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  ]
+}

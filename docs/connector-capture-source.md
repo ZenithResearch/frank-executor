@@ -1,9 +1,10 @@
 # Unsigned connector capture candidate
 
 This library retains original unsigned connector observations while withholding
-terminal output until an appropriate result issuer is available. Public tests
-exercise its source behavior; private review receipts are not public qualification.
-No identity, opcode, grant or live native role is created by this module.
+terminal output until a matching native result issuer and independent verifier
+admit the exact capture. Public tests exercise its source and Frank-side exchange
+behavior; private review receipts are not public qualification. No identity,
+opcode, grant or live native role is created by this module.
 
 The trusted host may pass a `ConnectorCapture` to one Matrix or Hermes adapter,
 or supply the same dependency by integration ID to `configured_registry` during
@@ -70,21 +71,32 @@ Reconciliation only reads retained capture and never reruns Hermes. SDK artifact
 and configuration pins are source assertions for later independent qualification,
 not model correctness or native result authority.
 
-## Withheld terminal output
+## Native connector-result handoff
 
-No issuer is implemented or stubbed. A captured terminal result raises
+Without an injected `ConnectorResultProducer`, a captured terminal result raises
 `CapturePending`; Matrix returns neither its terminal page nor its next cursor,
 and Hermes never returns or caches the unsigned terminal body. Existing Executor
 paths therefore cannot admit it through local development result verification.
 Nonterminal acknowledgements and unknown observations are never eligible
 captures. Hermes marker-without-capture reconciliation returns no result.
 
+Frank's producer orchestration persists a closed
+`frank.connector-result-selector.v1` record that binds the exact work, normalized
+body, native payload, connector policy, provenance, original response, integration,
+event and Runtime effect resource. It supports an initial `attest`, exact-selector
+`resume` and exact-parent `renew`, with at most four exchanges per effect. The
+selector grants no authority. The pinned native helper must independently reopen
+the selected owner-private journal, validate all referenced capture bytes and
+issue the result envelope. Frank then requires `NativeResultAdmission` from its
+independent verifier before the adapter can return the proved result.
+
 `ConnectorCapture.retained` is an internal evidence read. It rechecks work,
 body, policy and provenance digests and returns original eligible capture data.
 An admitted native or legacy result without this record has no connector-role
-renewal eligibility. No issuance, retry or renewal operation is implemented.
-Those contracts, fresh native nonce/context production and current authority
-requirements remain with NS-04 and the later NS-07 acceptance review.
+renewal eligibility. Frank implements the exchange and verification side; the
+native journal reader, fresh nonce/context production, accountable connector
+result role and installed production composition remain with NS-04 and the
+later NS-07 acceptance review.
 
 `Executor`, `ResultVerifier`, `NativeResultAdmission` and the existing guarded
 Runtime dispatch paths remain unchanged. Only the independent verifier may

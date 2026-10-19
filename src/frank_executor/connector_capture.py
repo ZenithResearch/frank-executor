@@ -20,6 +20,8 @@ MAX_REFERENCE_BYTES = 4_096
 MAX_MATRIX_ROOMS = 100
 MAX_MATRIX_EVENTS = 1_000
 MAX_PAGE_RESULTS = 100
+MAX_RESULT_HISTORY = 4
+MAX_RESULT_ENVELOPE = 700_000
 _HASH = re.compile(r"[a-f0-9]{64}\Z")
 
 
@@ -307,4 +309,91 @@ class ConnectorCapture:
                     raise Rejected("Retained Hermes provenance changed")
             return {"effect_key": row["effect_key"], "state": "unsigned-capture-pending",
                     "body": result, "work": current, "provenance": provenance,
-                    "payload": payload, "resource": capture["resource"]}
+                    "payload": payload, "resource": capture["resource"],
+                    "policy_sha256": _sha(self._policy_bytes),
+                    "body_sha256": capture["body_sha256"],
+                    "provenance_sha256": capture["provenance_sha256"],
+                    "original_sha256": capture["original_sha256"]}
+
+    def exchange(self, work, mode=None, renewal_of=None):
+        """Select one immutable native attestation exchange for a retained capture.
+
+        Persisting this selector does not grant authority. The native producer must
+        independently reopen the selected journal and validate every referenced
+        capture byte before issuing an envelope.
+        """
+        retained = self.retained(work)
+        if retained is None:
+            raise CapturePending("No retained connector result")
+        key = retained["effect_key"]
+        with self.journal.connection() as db:
+            db.execute("BEGIN IMMEDIATE")
+            rows = db.execute(
+                "SELECT * FROM connector_result_exchange WHERE effect_key=? ORDER BY id",
+                (key,),
+            ).fetchall()
+            if mode is None:
+                return dict(rows[-1]) if rows else None
+            if mode not in {"attest", "renew"} or (mode == "attest") != (renewal_of is None):
+                raise Rejected("Invalid connector result exchange")
+            if mode == "attest":
+                if rows:
+                    raise CapturePending("Use explicit retained-result resume or renewal")
+            else:
+                if (
+                    not rows
+                    or rows[-1]["envelope"] is None
+                    or _sha(bytes(rows[-1]["envelope"])) != renewal_of
+                ):
+                    raise CapturePending("Renewal requires the retained completed tip")
+            if len(rows) >= MAX_RESULT_HISTORY:
+                raise Rejected("Connector result proof history capacity exhausted")
+            selector = canonical({
+                "schema": "frank.connector-result-selector.v1",
+                "effect_key": key,
+                "work_sha256": digest(retained["work"]),
+                "body_sha256": retained["body_sha256"],
+                "payload_sha256": _sha(retained["payload"]),
+                "resource": retained["resource"],
+                "policy_sha256": retained["policy_sha256"],
+                "provenance_sha256": retained["provenance_sha256"],
+                "original_sha256": retained["original_sha256"],
+                "integration_id": retained["body"]["integration_id"],
+                "event_id": retained["body"]["event_id"],
+                "renewal_of": renewal_of,
+            })
+            selector_sha = _sha(selector)
+            db.execute(
+                "INSERT INTO connector_result_exchange"
+                "(effect_key,selector_sha256,selector,mode,renewal_of,envelope) "
+                "VALUES (?,?,?,?,?,NULL)",
+                (key, selector_sha, selector, mode, renewal_of),
+            )
+            return dict(db.execute(
+                "SELECT * FROM connector_result_exchange WHERE effect_key=? AND selector_sha256=?",
+                (key, selector_sha),
+            ).fetchone())
+
+    def exchange_completed(self, work, exchange, envelope):
+        retained = self.retained(work)
+        if retained is None or type(exchange) is not dict:
+            raise CapturePending("No retained connector result exchange")
+        if type(envelope) is not bytes or not 0 < len(envelope) <= MAX_RESULT_ENVELOPE:
+            raise Rejected("Connector result envelope exceeds bound")
+        key = retained["effect_key"]
+        with self.journal.connection() as db:
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute(
+                "SELECT * FROM connector_result_exchange WHERE effect_key=? AND selector_sha256=?",
+                (key, exchange.get("selector_sha256")),
+            ).fetchone()
+            if row is None or bytes(row["selector"]) != bytes(exchange.get("selector", b"")):
+                raise Rejected("Connector result exchange changed")
+            if row["envelope"] is not None:
+                if bytes(row["envelope"]) != envelope:
+                    raise Rejected("Connector result envelope changed")
+                return
+            db.execute(
+                "UPDATE connector_result_exchange SET envelope=? WHERE id=?",
+                (envelope, row["id"]),
+            )

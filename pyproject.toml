@@ -31,6 +31,6 @@ line-length = 100
 target-version = "py312"
 
 [tool.setuptools.data-files]
-"share/frank-executor/contracts" = ["contracts/integration-adapter-v1.schema.json", "contracts/runtime-v1.schema.json", "contracts/native-result-authority-v1.schema.json"]
+"share/frank-executor/contracts" = ["contracts/integration-adapter-v1.schema.json", "contracts/runtime-v1.schema.json", "contracts/native-result-authority-v1.schema.json", "contracts/connector-result-selector-v1.schema.json"]
 "share/frank-executor/contracts/fixtures" = ["contracts/fixtures/work.v1.json", "contracts/fixtures/result.v1.json"]
-"share/frank-executor/examples" = ["examples/frank.local.json", "examples/frank.production.json"]
+"share/frank-executor/examples" = ["examples/frank.local.json", "examples/frank.production.json", "examples/hermes.live-provider-pilot.json"]
