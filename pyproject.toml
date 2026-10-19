@@ -17,6 +17,7 @@ test = ["pytest>=8,<10"]
 frank-executor = "frank_executor.cli:main"
 frank-local-review = "frank_executor.local_review_cli:main"
 frank-workspace = "frank_executor.workspace_cli:main"
+frank-live-provider = "frank_executor.live_provider_cli:main"
 frank-review-packet = "frank_review_adapter.packet_reader:main"
 
 [tool.setuptools.packages.find]
