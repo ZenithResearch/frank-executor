@@ -4,6 +4,10 @@
 
 ### Added
 
+- Add closed Runtime input hydration for the live provider. Frank now verifies
+  the reviewed brief and zero-or-one-reference manifest before dispatch and
+  supplies the exact hash-bound PNG/JPEG bytes in the same pinned Hermes model
+  turn, while retaining a prompt that binds the immutable content digest.
 - Bound the live Hermes actor to the exact automated capabilities and resources
   of `zenith.anima.brand-package-v1`, excluding its human approval boundary.
 - Added a finite, review-first operator CLI for the separate brand approval

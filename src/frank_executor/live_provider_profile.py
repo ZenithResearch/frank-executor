@@ -148,6 +148,7 @@ def compose(profile):
     from process_runtime_client import RuntimeClient
     from frank_review_adapter.local_ports import RuntimeArtifacts, RuntimeClaims
     from .output_materializer import RuntimeOutputMaterializer
+    from .provider_input import RuntimeInputHydrator
     from .executor import Executor
     from .integrations.hermes import HermesAdapter
     from .journal import Journal
@@ -166,9 +167,11 @@ def compose(profile):
                              value["normalizer_sha256"])
     capture = ConnectorCapture(journal, policy)
     producer = ConnectorResultProducer(capture=capture, claims=claims, verifier=verifier, **master["result"])
+    artifacts = RuntimeArtifacts(gateway)
     adapter = HermesAdapter(actor["integration_id"], value["provider"], agent_factory=factory,
                             connector_capture=capture, connector_producer=producer,
-                            output_materializer=RuntimeOutputMaterializer(RuntimeArtifacts(gateway)))
+                            output_materializer=RuntimeOutputMaterializer(artifacts),
+                            input_hydrator=RuntimeInputHydrator(artifacts))
     registry = Registry({"schema":"frank.integrations.v1", "actors":[actor], "integrations":[{
         "id":actor["integration_id"], "plugin":"hermes-live", "enabled":True, "config":{}}]},
         {"hermes-live":lambda *_:adapter})

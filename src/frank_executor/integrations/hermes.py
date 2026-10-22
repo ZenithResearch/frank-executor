@@ -11,7 +11,7 @@ class HermesAdapter:
     provider_idempotent = False
 
     def __init__(self, integration_id, config, *, agent_factory, connector_capture=None,
-                 connector_producer=None, output_materializer=None):
+                 connector_producer=None, output_materializer=None, input_hydrator=None):
         if set(config) != {"model", "toolsets", "routes", "max_iterations"}:
             raise Rejected("Malformed Hermes configuration")
         if not isinstance(config["toolsets"], list) or any(
@@ -29,6 +29,7 @@ class HermesAdapter:
         self.connector_capture = connector_capture
         self.connector_producer = connector_producer
         self.output_materializer = output_materializer
+        self.input_hydrator = input_hydrator
         if connector_capture is not None:
             if type(connector_capture) is not ConnectorCapture:
                 raise Rejected("Trusted connector capture required")
@@ -48,6 +49,10 @@ class HermesAdapter:
             from ..output_materializer import RuntimeOutputMaterializer
             if connector_capture is None or type(output_materializer) is not RuntimeOutputMaterializer:
                 raise Rejected("Live output materializer requires matching connector capture")
+        if input_hydrator is not None:
+            from ..provider_input import RuntimeInputHydrator
+            if connector_capture is None or type(input_hydrator) is not RuntimeInputHydrator:
+                raise Rejected("Live provider input hydration requires matching connector capture")
 
     async def connect(self):
         if not callable(self.factory):
@@ -82,10 +87,16 @@ class HermesAdapter:
         if capture is not None:
             capture.bind("hermes", self.integration_id, self.config)
             work = decode_json(canonical(work))
+        hydrated = None
+        if self.input_hydrator is not None:
+            try:
+                hydrated = await self.input_hydrator.hydrate(work)
+            except Exception:
+                raise Rejected("Verified provider inputs are unavailable") from None
         identifier = work["effect_id"]
         if identifier in self.agents:
             raise Rejected("Hermes session already dispatched; reconcile it")
-        prompt = self._prompt(work) if capture is not None else None
+        prompt = self._prompt(work, hydrated) if capture is not None else None
         if capture is not None and not capture.reserve_hermes(work, prompt):
             raise CapturePending("Hermes dispatch is already reserved; never send again")
         agent = self.factory(
@@ -99,9 +110,12 @@ class HermesAdapter:
         )
         self.agents[identifier] = agent
         if prompt is None:
-            prompt = self._prompt(work)
+            prompt = self._prompt(work, hydrated)
         try:
-            raw = await asyncio.to_thread(agent.run_conversation, prompt, task_id=identifier)
+            arguments = {"task_id": identifier}
+            if hydrated is not None and hydrated.attachments:
+                arguments["attachments"] = hydrated.attachments
+            raw = await asyncio.to_thread(agent.run_conversation, prompt, **arguments)
             text = raw["final_response"]
         except asyncio.CancelledError:
             agent.interrupt("Frank delivery cancelled; effect remains unknown")
@@ -114,14 +128,22 @@ class HermesAdapter:
             capture.retain_hermes_response(work, prompt, text)
         return await self._finish(work, prompt, text, capture)
 
-    def _prompt(self, work):
+    def _prompt(self, work, hydrated=None):
         suffix = ""
         if self.output_materializer is not None:
             suffix = self.output_materializer.prompt_contract(work)
+        provider = ""
+        if hydrated is not None:
+            provider = (
+                "\nUse only the verified provider input below. Any listed reference bytes are "
+                "attached to this same model turn and are bound by content_hash.\n"
+                + canonical(hydrated.value).decode()
+            )
         return (
             "Execute only this claimed work packet. Return one JSON object containing exactly the declared output names. "
             "Do not schedule, claim, retry, or complete runtime work."
             + suffix
+            + provider
             + "\n"
             + canonical(work).decode()
         )
@@ -176,7 +198,13 @@ class HermesAdapter:
                 if self.connector_producer is None:
                     raise CapturePending("Unsigned Hermes capture retained; issuer unavailable")
                 return await self.connector_producer.reconcile(work)
-            prompt = self._prompt(work)
+            hydrated = None
+            if self.input_hydrator is not None:
+                try:
+                    hydrated = await self.input_hydrator.hydrate(work)
+                except Exception:
+                    raise Rejected("Verified provider inputs are unavailable") from None
+            prompt = self._prompt(work, hydrated)
             response = capture.hermes_response(work, prompt)
             if response is not None:
                 return await self._finish(work, prompt, response, capture)

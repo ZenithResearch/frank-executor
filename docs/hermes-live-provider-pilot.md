@@ -1,8 +1,8 @@
 # Hermes live-provider pilot
 
 Status: the scalar-output canary has executed successfully. Artifact-output
-materialization and the finite automated brand actor are source-qualified but
-have not been released or installed.
+materialization, immutable input hydration and the finite automated brand actor
+are source-qualified but have not been released or installed.
 
 The first live provider is the installed Hermes 0.20.0 `sophia` profile using
 the `openai-codex` provider and `gpt-5.6-sol`. The pilot actor is
@@ -20,23 +20,32 @@ external tool effect. The model inference itself is the only external send.
 1. Runtime creates and owns the canary run and eligible work.
 2. Frank's existing Wallet command authority registers, lists, claims,
    heartbeats and records the exact external-effect intent.
-3. Hermes receives the exact retained work packet once. Frank durably retains
+3. Frank resolves the claimed `reviewed_brief` and `reference_manifest` through
+   Runtime before reserving a dispatch. It verifies both artifact references,
+   the closed brief schema and value digest, and the reference manifest's exact
+   embedded original. The first profile permits zero or one PNG/JPEG reference
+   up to 524,288 bytes. Its hash-bound image is supplied in the same Hermes model
+   turn; no path, URL, browser state or placeholder substitutes for missing bytes.
+4. Hermes receives the exact retained work packet and verified provider input
+   once. The captured prompt contains the closed brief and immutable reference
+   manifest, so its digest binds the image supplied by the pinned subprocess.
+   Frank durably retains
    the exact final response before any derived Runtime write. A restart can
    continue from those bytes without dispatching Hermes again.
-4. For a declared artifact output, Hermes returns a closed UTF-8 descriptor
+5. For a declared artifact output, Hermes returns a closed UTF-8 descriptor
    containing `content_utf8` and an allowed media type. Frank writes those bytes
    through Runtime `artifact.put` with a deterministic request ID, verifies the
    returned content-addressed reference and replaces the descriptor with that
    canonical `ArtifactRef`. Scalar outputs retain their declared Runtime types.
-5. Frank commits the normalized result and source provenance before any result
+6. Frank commits the normalized result and source provenance before any result
    can escape the adapter. Historical capture rows remain readable; new capture
    rows also bind the pre-materialization response record.
-6. A pinned native connector-result producer reopens the owner-private Frank
+7. A pinned native connector-result producer reopens the owner-private Frank
    journal, validates the immutable selector, capture bytes and nested native
    authority configuration pin, and issues a short-lived
    `frank.result.attest.v1` envelope for the exact Attempt, fence, effect,
    actor, integration, route and normalized result.
-7. Frank's independent native verifier admits that envelope. Runtime then
+8. Frank's independent native verifier admits that envelope. Runtime then
    independently authenticates each observe and complete command and commits
    the typed output.
 
@@ -66,6 +75,9 @@ independent verifier remains the only source of `NativeResultAdmission`.
   values in output or logs.
 - One eligible run produces exactly one durable Hermes dispatch reservation
   and one provider invocation.
+- Missing, changed, malformed, oversized or unsupported Runtime input artifacts
+  fail before Hermes dispatch. A selected image reaches Hermes in the same model
+  turn, while the persisted user transcript contains only the captured prompt.
 - The returned output matches the declared Runtime type and is committed only
   after native result admission.
 - Artifact outputs accept only `text/markdown`, `text/plain` or
