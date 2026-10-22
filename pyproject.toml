@@ -17,6 +17,7 @@ test = ["pytest>=8,<10"]
 frank-executor = "frank_executor.cli:main"
 frank-local-review = "frank_executor.local_review_cli:main"
 frank-workspace = "frank_executor.workspace_cli:main"
+frank-live-provider = "frank_executor.live_provider_cli:main"
 frank-review-packet = "frank_review_adapter.packet_reader:main"
 
 [tool.setuptools.packages.find]
@@ -31,6 +32,6 @@ line-length = 100
 target-version = "py312"
 
 [tool.setuptools.data-files]
-"share/frank-executor/contracts" = ["contracts/integration-adapter-v1.schema.json", "contracts/runtime-v1.schema.json", "contracts/native-result-authority-v1.schema.json"]
+"share/frank-executor/contracts" = ["contracts/integration-adapter-v1.schema.json", "contracts/runtime-v1.schema.json", "contracts/native-result-authority-v1.schema.json", "contracts/connector-result-selector-v1.schema.json"]
 "share/frank-executor/contracts/fixtures" = ["contracts/fixtures/work.v1.json", "contracts/fixtures/result.v1.json"]
-"share/frank-executor/examples" = ["examples/frank.local.json", "examples/frank.production.json"]
+"share/frank-executor/examples" = ["examples/frank.local.json", "examples/frank.production.json", "examples/hermes.live-provider-pilot.json"]

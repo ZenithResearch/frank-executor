@@ -10,7 +10,8 @@ class HermesAdapter:
     contract_version = "frank.integration.v1"
     provider_idempotent = False
 
-    def __init__(self, integration_id, config, *, agent_factory, connector_capture=None):
+    def __init__(self, integration_id, config, *, agent_factory, connector_capture=None,
+                 connector_producer=None):
         if set(config) != {"model", "toolsets", "routes", "max_iterations"}:
             raise Rejected("Malformed Hermes configuration")
         if not isinstance(config["toolsets"], list) or any(
@@ -26,6 +27,7 @@ class HermesAdapter:
         self.agents = {}
         self.results = {}
         self.connector_capture = connector_capture
+        self.connector_producer = connector_producer
         if connector_capture is not None:
             if type(connector_capture) is not ConnectorCapture:
                 raise Rejected("Trusted connector capture required")
@@ -33,6 +35,14 @@ class HermesAdapter:
             if connector_capture.policy.route not in config["routes"]:
                 raise Rejected("Capture route is not configured")
             self.config = decode_json(canonical(config))
+        if connector_producer is not None:
+            from ..connector_result_producer import ConnectorResultProducer
+            if (
+                connector_capture is None
+                or type(connector_producer) is not ConnectorResultProducer
+                or connector_producer.capture is not connector_capture
+            ):
+                raise Rejected("Matching native connector result producer required")
 
     async def connect(self):
         if not callable(self.factory):
@@ -46,6 +56,8 @@ class HermesAdapter:
         for agent in self.agents.values():
             agent.interrupt("Frank adapter closing")
         self.ready = False
+        if self.connector_producer is not None:
+            await self.connector_producer.aclose()
 
     async def capabilities(self):
         return frozenset({"send", "receive", "health", "cancel", "reconcile"})
@@ -117,7 +129,9 @@ class HermesAdapter:
             capture.bind("hermes", self.integration_id, self.config)
             item = capture.prepare_hermes(result, prompt=prompt, final_response=text)
             capture.commit((item,))
-            raise CapturePending("Unsigned Hermes capture retained; issuer unavailable")
+            if self.connector_producer is None:
+                raise CapturePending("Unsigned Hermes capture retained; issuer unavailable")
+            return await self.connector_producer.bind(work)
         self.results[identifier] = result
         return result
 
@@ -138,6 +152,8 @@ class HermesAdapter:
         if capture is not None and capture.selected(work["route"]):
             capture.bind("hermes", self.integration_id, self.config)
             if capture.retained(work) is not None:
-                raise CapturePending("Unsigned Hermes capture retained; issuer unavailable")
+                if self.connector_producer is None:
+                    raise CapturePending("Unsigned Hermes capture retained; issuer unavailable")
+                return await self.connector_producer.reconcile(work)
             return None
         return self.results.get(work["effect_id"])

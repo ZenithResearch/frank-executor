@@ -1,0 +1,29 @@
+{
+  "schema": "frank.live-provider-pilot.v1",
+  "provider": {
+    "kind": "hermes",
+    "installed_version": "0.20.0",
+    "profile": "sophia",
+    "model_provider": "openai-codex",
+    "model": "gpt-5.6-sol",
+    "toolsets": [],
+    "max_iterations": 4
+  },
+  "actor": {
+    "actor_id": "frank-hermes-pilot",
+    "integration_id": "hermes-sophia-pilot",
+    "route": "local"
+  },
+  "canary": {
+    "process_id": "hermes-provider-canary",
+    "version_id": "hermes-provider-canary-v1",
+    "step_id": "respond",
+    "external_effects": ["model-inference"],
+    "tools_enabled": false
+  },
+  "admission": {
+    "new_runs_enabled": false,
+    "requires_native_connector_result": true,
+    "requires_explicit_receiver_grant": true
+  }
+}
