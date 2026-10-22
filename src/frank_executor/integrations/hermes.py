@@ -11,7 +11,7 @@ class HermesAdapter:
     provider_idempotent = False
 
     def __init__(self, integration_id, config, *, agent_factory, connector_capture=None,
-                 connector_producer=None):
+                 connector_producer=None, output_materializer=None):
         if set(config) != {"model", "toolsets", "routes", "max_iterations"}:
             raise Rejected("Malformed Hermes configuration")
         if not isinstance(config["toolsets"], list) or any(
@@ -28,6 +28,7 @@ class HermesAdapter:
         self.results = {}
         self.connector_capture = connector_capture
         self.connector_producer = connector_producer
+        self.output_materializer = output_materializer
         if connector_capture is not None:
             if type(connector_capture) is not ConnectorCapture:
                 raise Rejected("Trusted connector capture required")
@@ -43,6 +44,10 @@ class HermesAdapter:
                 or connector_producer.capture is not connector_capture
             ):
                 raise Rejected("Matching native connector result producer required")
+        if output_materializer is not None:
+            from ..output_materializer import RuntimeOutputMaterializer
+            if connector_capture is None or type(output_materializer) is not RuntimeOutputMaterializer:
+                raise Rejected("Live output materializer requires matching connector capture")
 
     async def connect(self):
         if not callable(self.factory):
@@ -80,10 +85,7 @@ class HermesAdapter:
         identifier = work["effect_id"]
         if identifier in self.agents:
             raise Rejected("Hermes session already dispatched; reconcile it")
-        prompt = (
-            "Execute only this claimed work packet. Return one JSON object containing exactly the declared output names. Do not schedule, claim, retry, or complete runtime work.\n"
-            + canonical(work).decode()
-        ) if capture is not None else None
+        prompt = self._prompt(work) if capture is not None else None
         if capture is not None and not capture.reserve_hermes(work, prompt):
             raise CapturePending("Hermes dispatch is already reserved; never send again")
         agent = self.factory(
@@ -97,31 +99,50 @@ class HermesAdapter:
         )
         self.agents[identifier] = agent
         if prompt is None:
-            prompt = (
-                "Execute only this claimed work packet. Return one JSON object containing exactly the declared output names. Do not schedule, claim, retry, or complete runtime work.\n"
-                + canonical(work).decode()
-            )
+            prompt = self._prompt(work)
         try:
             raw = await asyncio.to_thread(agent.run_conversation, prompt, task_id=identifier)
             text = raw["final_response"]
-            if not isinstance(text, str) or len(text.encode()) > 1024 * 1024:
-                raise Rejected("Hermes result exceeds bound")
-            outputs = decode_json(text)
-            if not isinstance(outputs, dict):
-                raise Rejected("Hermes must return an output object")
         except asyncio.CancelledError:
             agent.interrupt("Frank delivery cancelled; effect remains unknown")
             raise
         except Exception:
             raise Rejected("Hermes outcome unavailable; reconcile the session") from None
+        if not isinstance(text, str) or len(text.encode()) > 1024 * 1024:
+            raise Rejected("Hermes result exceeds bound")
+        if capture is not None:
+            capture.retain_hermes_response(work, prompt, text)
+        return await self._finish(work, prompt, text, capture)
+
+    def _prompt(self, work):
+        suffix = ""
+        if self.output_materializer is not None:
+            suffix = self.output_materializer.prompt_contract(work)
+        return (
+            "Execute only this claimed work packet. Return one JSON object containing exactly the declared output names. "
+            "Do not schedule, claim, retry, or complete runtime work."
+            + suffix
+            + "\n"
+            + canonical(work).decode()
+        )
+
+    async def _finish(self, work, prompt, text, capture):
+        try:
+            outputs = decode_json(text)
+        except Rejected:
+            raise Rejected("Hermes outcome unavailable; reconcile the session") from None
+        if not isinstance(outputs, dict):
+            raise Rejected("Hermes must return an output object")
+        if self.output_materializer is not None:
+            outputs = await self.output_materializer.materialize(work, outputs)
         result = {
             "schema": "frank.result.v1",
-            "event_id": "hermes-" + digest({"effect_id": identifier, "outputs": outputs})[:48],
+            "event_id": "hermes-" + digest({"effect_id": work["effect_id"], "outputs": outputs})[:48],
             **{
                 key: work[key]
                 for key in ("binding", "actor_id", "integration_id", "route", "effect_id")
             },
-            "provider_reference": identifier,
+            "provider_reference": work["effect_id"],
             "outcome": "succeeded",
             "outputs": outputs,
         }
@@ -132,7 +153,7 @@ class HermesAdapter:
             if self.connector_producer is None:
                 raise CapturePending("Unsigned Hermes capture retained; issuer unavailable")
             return await self.connector_producer.bind(work)
-        self.results[identifier] = result
+        self.results[work["effect_id"]] = result
         return result
 
     async def receive(self, cursor):
@@ -155,5 +176,9 @@ class HermesAdapter:
                 if self.connector_producer is None:
                     raise CapturePending("Unsigned Hermes capture retained; issuer unavailable")
                 return await self.connector_producer.reconcile(work)
+            prompt = self._prompt(work)
+            response = capture.hermes_response(work, prompt)
+            if response is not None:
+                return await self._finish(work, prompt, response, capture)
             return None
         return self.results.get(work["effect_id"])

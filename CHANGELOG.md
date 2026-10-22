@@ -3,6 +3,10 @@
 ## [Unreleased]
 
 ### Added
+- Add restart-safe Hermes artifact output materialization — exact provider
+  responses are retained before content-addressed Runtime writes, deterministic
+  request IDs recover unknown write outcomes, and only declared bounded textual
+  artifacts become Runtime-owned references.
 - Add a pinned subprocess boundary and closed live-provider CLI for Hermes 0.20.0 — Frank can use the isolated Sophia installation without duplicating its environment or accepting model, tool, route, or iteration drift.
 - Add a native-gated Hermes result handoff with immutable connector selectors and exact resume/renewal — live provider output can reach Runtime only after independent native admission while preserving one-send recovery.
 - Add a native-configured empty process workspace client with exact intent recovery and composition-bound journal metadata — authoring no longer needs a review SOP, recording, executor or provider. All720 paired public-source tests pass.

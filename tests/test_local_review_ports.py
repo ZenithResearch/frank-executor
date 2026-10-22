@@ -140,6 +140,30 @@ def test_artifact_port_uses_public_wire_and_checks_actual_content():
     asyncio.run(case())
 
 
+def test_artifact_port_replays_deterministic_request_after_unknown_outcome():
+    class Saved:
+        def __init__(self): self.ids=set()
+        def saved_command(self,request_id):
+            if request_id not in self.ids: raise Rejected("Unknown command request")
+            return {"request_id":request_id}
+    class ReplayGateway(UnitGateway):
+        def __init__(self): super().__init__();self.journal=Saved();self.replays=[]
+        async def execute(self,op,payload,expected_version,**kwargs):
+            self.journal.ids.add(kwargs["request_id"])
+            return await super().execute(op,payload,expected_version,**kwargs)
+        async def replay(self,request_id):
+            self.replays.append(request_id)
+            payload=self.writes[0][1]
+            return {"result":{"artifact":payload["artifact"]}}
+    gateway=ReplayGateway();port=RuntimeArtifacts(gateway);raw=b"same bytes"
+    async def case():
+        first=await port.write(raw,"text/plain",request_id="artifact-fixed")
+        second=await port.write(raw,"text/plain",request_id="artifact-fixed")
+        assert first==second and gateway.replays==["artifact-fixed"]
+        assert len(gateway.writes)==1
+    asyncio.run(case())
+
+
 def claim_fixture(tmp_path, capabilities=None):
     from process_runtime.compiler import compile_draft
     capture,work=setup_capture(tmp_path)

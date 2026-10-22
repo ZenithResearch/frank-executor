@@ -4,6 +4,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from dataclasses import replace
+import hashlib
 import json
 from pathlib import Path
 import sqlite3
@@ -20,8 +21,9 @@ from frank_executor.executor import Executor
 from frank_executor.integrations.hermes import HermesAdapter
 from frank_executor.integrations.matrix import MatrixAdapter
 from frank_executor.journal import Journal
-from frank_executor.model import Rejected, canonical, digest
+from frank_executor.model import Rejected, UnknownOutcome, canonical, digest
 from frank_executor.native_results import payload_for, resource_for
+from frank_executor.output_materializer import RuntimeOutputMaterializer
 from conftest import Adapter, arun, child_environment, python_child
 from test_adapters import MATRIX, Hermes
 from test_contract_journal import packet
@@ -506,6 +508,89 @@ def test_hermes_malformed_return_leaves_marker_without_capture(tmp_path):
     with pytest.raises(CapturePending):
         arun(restarted.send(work))
     assert_no_terminal(journal)
+
+
+def test_hermes_response_survives_artifact_unknown_outcome_without_redispatch(tmp_path):
+    work = packet()
+    work["output_types"] = {"document": {"kind": "artifact"}}
+    journal, capture, work = setup_capture(tmp_path, "hermes", work=work)
+
+    class Document(Hermes):
+        def run_conversation(self, *args, **kwargs):
+            return {
+                "final_response": json.dumps({
+                    "document": {
+                        "content_utf8": "# Durable output\n",
+                        "media_type": "text/markdown",
+                    }
+                })
+            }
+
+    calls = []
+
+    class UnknownWriter:
+        async def write(self, content, media_type, *, request_id=None):
+            calls.append((content, media_type, request_id, "unknown"))
+            raise UnknownOutcome("artifact result lost")
+
+    adapter = HermesAdapter(
+        "fixture",
+        deepcopy(HERMES),
+        agent_factory=Document,
+        connector_capture=capture,
+        output_materializer=RuntimeOutputMaterializer(UnknownWriter()),
+    )
+    arun(adapter.connect())
+    with pytest.raises(UnknownOutcome):
+        arun(adapter.send(work))
+    assert capture.retained(work) is None
+    prompt = adapter._prompt(work)
+    assert capture.hermes_response(work, prompt) is not None
+
+    class RecoveredWriter:
+        async def write(self, content, media_type, *, request_id=None):
+            calls.append((content, media_type, request_id, "recovered"))
+            return {
+                "content_hash": hashlib.sha256(content).hexdigest(),
+                "byte_length": len(content),
+                "media_type": media_type,
+            }
+
+    def forbidden_factory(**kwargs):
+        raise AssertionError("reconcile must not redispatch Hermes")
+
+    reopened = ConnectorCapture(Journal(journal.path), policy("hermes", HERMES))
+    restarted = HermesAdapter(
+        "fixture",
+        deepcopy(HERMES),
+        agent_factory=forbidden_factory,
+        connector_capture=reopened,
+        output_materializer=RuntimeOutputMaterializer(RecoveredWriter()),
+    )
+    arun(restarted.connect())
+    with pytest.raises(CapturePending):
+        arun(restarted.reconcile(work, work["effect_id"]))
+    retained = reopened.retained(work)
+    assert retained["body"]["outputs"]["document"] == {
+        "content_hash": hashlib.sha256(b"# Durable output\n").hexdigest(),
+        "byte_length": 17,
+        "media_type": "text/markdown",
+    }
+    assert calls[0][2] == calls[1][2]
+
+
+def test_historical_hermes_capture_without_response_row_remains_readable(tmp_path):
+    journal, capture, work = setup_capture(tmp_path, "hermes")
+    adapter = HermesAdapter(
+        "fixture", deepcopy(HERMES), agent_factory=Hermes, connector_capture=capture
+    )
+    arun(adapter.connect())
+    with pytest.raises(CapturePending):
+        arun(adapter.send(work))
+    with journal.connection() as db:
+        db.execute("DELETE FROM connector_responses")
+    retained = ConnectorCapture(Journal(journal.path), policy("hermes", HERMES)).retained(work)
+    assert retained["body"]["outputs"] == {"answer": 14}
 
 
 def test_hermes_cancelled_await_retains_marker_and_interrupts_without_capture(tmp_path):
