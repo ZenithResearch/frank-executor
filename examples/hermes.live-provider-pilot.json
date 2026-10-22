@@ -12,12 +12,25 @@
   "actor": {
     "actor_id": "frank-hermes-pilot",
     "integration_id": "hermes-sophia-pilot",
-    "route": "local"
+    "route": "local",
+    "capabilities": [
+      "brand.intake.qualify",
+      "brand.package.assemble",
+      "brand.research.market",
+      "brand.research.visual",
+      "brand.review.roundtable",
+      "brand.strategy.develop",
+      "brand.system.develop"
+    ],
+    "resources": [
+      "brand.research",
+      "brand.workspace"
+    ]
   },
   "canary": {
-    "process_id": "hermes-provider-canary",
-    "version_id": "hermes-provider-canary-v1",
-    "step_id": "respond",
+    "process_id": "zenith.anima.brand-package",
+    "version_id": "zenith.anima.brand-package-v1",
+    "manual_step_id": "human-approval",
     "external_effects": ["model-inference"],
     "tools_enabled": false
   },

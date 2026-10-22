@@ -3,6 +3,12 @@
 ## [Unreleased]
 
 ### Added
+
+- Bound the live Hermes actor to the exact automated capabilities and resources
+  of `zenith.anima.brand-package-v1`, excluding its human approval boundary.
+- Added a finite, review-first operator CLI for the separate brand approval
+  Actor, with pinned claim/decision files, committed approval artifacts and
+  stable retry identities.
 - Add restart-safe Hermes artifact output materialization — exact provider
   responses are retained before content-addressed Runtime writes, deterministic
   request IDs recover unknown write outcomes, and only declared bounded textual

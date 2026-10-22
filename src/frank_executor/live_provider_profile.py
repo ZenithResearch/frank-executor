@@ -15,6 +15,18 @@ from .native_results import FileReceiverPolicy, NativeResultVerifier, NativeSecS
 from .wallet_authority import WalletCallAuthority, _pinned_file
 
 
+BRAND_CAPABILITIES = (
+    "brand.intake.qualify",
+    "brand.package.assemble",
+    "brand.research.market",
+    "brand.research.visual",
+    "brand.review.roundtable",
+    "brand.strategy.develop",
+    "brand.system.develop",
+)
+BRAND_RESOURCES = ("brand.research", "brand.workspace")
+
+
 def closed(value, fields):
     if type(value) is not dict or set(value) != set(fields):
         raise Rejected("Unsupported live-provider profile shape")
@@ -103,8 +115,10 @@ def load_profile(config_path, config_sha256):
     journal = path(value["journal"])
     actor = closed(value["actor"], ("actor_id", "integration_id", "route", "capabilities", "resources"))
     for name in ("actor_id", "integration_id", "route"): identity(actor[name])
-    if (actor["capabilities"] != ["compute"] or actor["resources"] != [] or actor["route"] != "local"):
-        raise Rejected("First live provider is limited to local compute")
+    if (actor["capabilities"] != list(BRAND_CAPABILITIES)
+            or actor["resources"] != list(BRAND_RESOURCES)
+            or actor["route"] != "local"):
+        raise Rejected("First live provider is limited to the reviewed automated brand profile")
     if (type(value["run_ids"]) is not list or not 1 <= len(value["run_ids"]) <= 16
             or len(set(value["run_ids"])) != len(value["run_ids"])):
         raise Rejected("Finite live-provider runs required")

@@ -1,13 +1,18 @@
 # Hermes live-provider pilot
 
 Status: the scalar-output canary has executed successfully. Artifact-output
-materialization is source-qualified but has not been released or installed.
+materialization and the finite automated brand actor are source-qualified but
+have not been released or installed.
 
 The first live provider is the installed Hermes 0.20.0 `sophia` profile using
 the `openai-codex` provider and `gpt-5.6-sol`. The pilot actor is
 `frank-hermes-pilot`, its integration is `hermes-sophia-pilot`, and its only
 route is `local`. The first canary enables no toolsets and has a maximum of four
-agent iterations. It must return one declared JSON output and perform no
+agent iterations. It advertises exactly the automated capabilities in
+`zenith.anima.brand-package` and the `brand.research`/`brand.workspace`
+resources. It deliberately does not advertise `brand.review.human` or
+`brand.human-review`; that step requires the separately selected operator actor.
+Every invocation must return only the declared JSON outputs and perform no
 external tool effect. The model inference itself is the only external send.
 
 ## Required chain

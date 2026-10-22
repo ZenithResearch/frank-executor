@@ -8,6 +8,8 @@ import json
 from .live_provider_profile import load_profile, compose
 from .model import Binding, Rejected, UnknownOutcome
 
+BRAND_SCOPE = "zenith.anima.brand-package"
+
 
 async def run(args):
     try:
@@ -26,7 +28,7 @@ async def _run(args):
                 "native_artifacts_available":True, "runtime_checked":False,
                 "authorization":"checked per request", "tools":[]}
     if args.action == "execute" and (args.run_id not in profile.composition["run_ids"]
-            or args.operation != "compute"):
+            or args.operation != "compute" or args.scope != BRAND_SCOPE):
         raise Rejected("Execution is outside selected live-provider scope")
     executor = adapter = None
     try:
