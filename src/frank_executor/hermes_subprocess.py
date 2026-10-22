@@ -95,6 +95,7 @@ class _HermesProcess:
                              sort_keys=True, separators=(",", ":")).encode()
         worker = Path(__file__).with_name("hermes_worker.py")
         environment = {"HOME": str(Path.home()), "HERMES_HOME": str(self.factory.hermes_home),
+                       "HERMES_API_CALL_STALE_TIMEOUT": "300",
                        "LANG": "C.UTF-8", "PATH": os.defpath, "PYTHONNOUSERSITE": "1",
                        "PYTHONDONTWRITEBYTECODE": "1"}
         child = subprocess.Popen(

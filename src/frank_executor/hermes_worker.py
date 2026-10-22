@@ -22,7 +22,12 @@ def main():
         return 2
     sys.path.insert(0, str(root))
     from run_agent import AIAgent
-    agent = AIAgent(**{key: value[key] for key in required - {"prompt", "task_id"}})
+    configuration = {key: value[key] for key in required - {"prompt", "task_id"}}
+    if configuration["model"] != "openai-codex/gpt-5.6-sol":
+        return 2
+    configuration["provider"] = "openai-codex"
+    configuration["model"] = "gpt-5.6-sol"
+    agent = AIAgent(**configuration)
     result = agent.run_conversation(value["prompt"], task_id=value["task_id"])
     final = result.get("final_response") if type(result) is dict else None
     if type(final) is not str or len(final.encode()) > 1024 * 1024:
