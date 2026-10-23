@@ -4,6 +4,9 @@
 
 ### Added
 
+- Add a fixed, owner-reviewable mock execution binding for the Anima transport
+  proof and reject any mock artifact that omits its exact test label.
+
 - Add closed Runtime input hydration for the live provider. Frank now verifies
   the reviewed brief and zero-or-one-reference manifest before dispatch and
   supplies the exact hash-bound PNG/JPEG bytes in the same pinned Hermes model

@@ -15,6 +15,13 @@ resources. It deliberately does not advertise `brand.review.human` or
 Every invocation must return only the declared JSON outputs and perform no
 external tool effect. The model inference itself is the only external send.
 
+For the first transport proof, the optional closed `execution` binding may be
+set only to `{"mode":"mock","label":"ANIMA TRANSPORT TEST - MOCK OUTPUT - NOT BRAND WORK"}`.
+That binding adds the label to the retained Hermes prompt and rejects every text
+artifact that does not begin with it, plus every JSON artifact whose
+`test_label` field does not equal it. The default remains production behavior;
+the mock binding grants no additional capability or authority.
+
 ## Required chain
 
 1. Runtime creates and owns the canary run and eligible work.

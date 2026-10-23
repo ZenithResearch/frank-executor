@@ -1,9 +1,11 @@
 import asyncio
 import hashlib
+import json
 
 import pytest
 
 from frank_executor.model import Rejected
+from frank_executor.live_provider_profile import MOCK_EXECUTION_LABEL
 from frank_executor.output_materializer import RuntimeOutputMaterializer
 
 
@@ -82,7 +84,7 @@ def test_artifact_descriptor_fails_closed(outputs, message):
 
 
 def test_prompt_contract_names_artifact_outputs_without_requesting_fake_refs():
-    value = RuntimeOutputMaterializer.prompt_contract(
+    value = RuntimeOutputMaterializer(Artifacts()).prompt_contract(
         work({"document": {"kind": "artifact"}, "score": {"kind": "integer"}})
     )
     assert "document" in value and "content_utf8" in value
@@ -101,3 +103,26 @@ def test_scalar_type_failure_happens_before_any_artifact_write():
             },
         ))
     assert artifacts.calls == []
+
+
+def test_mock_binding_labels_and_rejects_unlabelled_artifacts_before_write():
+    artifacts = Artifacts()
+    materializer = RuntimeOutputMaterializer(
+        artifacts, test_label=MOCK_EXECUTION_LABEL)
+    prompt = materializer.prompt_contract(work({"document": {"kind": "artifact"}}))
+    assert MOCK_EXECUTION_LABEL in prompt and "not brand work" in prompt
+
+    with pytest.raises(Rejected, match="missing its test label"):
+        run(materializer.materialize(
+            work({"document": {"kind": "artifact"}}),
+            {"document": {"content_utf8": "looks real", "media_type": "text/plain"}},
+        ))
+    assert artifacts.calls == []
+
+    value = run(materializer.materialize(
+        work({"document": {"kind": "artifact"}}),
+        {"document": {"content_utf8": json.dumps({"test_label": MOCK_EXECUTION_LABEL,
+                                                    "result": "fixture"}),
+                      "media_type": "application/json"}},
+    ))
+    assert value["document"]["media_type"] == "application/json"

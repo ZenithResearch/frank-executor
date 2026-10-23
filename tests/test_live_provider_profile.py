@@ -9,6 +9,7 @@ import frank_executor.live_provider_profile as live_profile
 from frank_executor.live_provider_profile import (
     BRAND_CAPABILITIES,
     BRAND_RESOURCES,
+    MOCK_EXECUTION_LABEL,
     load_profile,
 )
 from frank_executor.model import Rejected
@@ -110,6 +111,25 @@ def test_live_provider_accepts_only_finite_automated_brand_actor(tmp_path, monke
     assert loaded.actor["capabilities"] == list(BRAND_CAPABILITIES)
     assert "brand.review.human" not in loaded.actor["capabilities"]
     assert "brand.human-review" not in loaded.actor["resources"]
+
+
+def test_live_provider_accepts_only_the_fixed_mock_execution_binding(tmp_path, monkeypatch):
+    allow_fixture_reads(monkeypatch)
+    master, composition_path, composition = profile(tmp_path)
+    composition["execution"] = {"mode": "mock", "label": MOCK_EXECUTION_LABEL}
+    composition_path.write_bytes(canonical(composition))
+    selected = json.loads(master.read_bytes())
+    selected["composition"]["sha256"] = sha(composition_path.read_bytes())
+    master.write_bytes(canonical(selected))
+    loaded = load_profile(str(master), sha(master.read_bytes()))
+    assert loaded.execution == {"mode": "mock", "label": MOCK_EXECUTION_LABEL}
+
+    composition["execution"]["label"] = "looks real"
+    composition_path.write_bytes(canonical(composition))
+    selected["composition"]["sha256"] = sha(composition_path.read_bytes())
+    master.write_bytes(canonical(selected))
+    with pytest.raises(Rejected, match="execution binding"):
+        load_profile(str(master), sha(master.read_bytes()))
 
 
 @pytest.mark.parametrize("field,value", [

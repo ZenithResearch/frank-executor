@@ -25,6 +25,7 @@ BRAND_CAPABILITIES = (
     "brand.system.develop",
 )
 BRAND_RESOURCES = ("brand.research", "brand.workspace")
+MOCK_EXECUTION_LABEL = "ANIMA TRANSPORT TEST - MOCK OUTPUT - NOT BRAND WORK"
 
 
 def closed(value, fields):
@@ -76,6 +77,10 @@ class LiveProviderProfile:
     @property
     def actor(self): return self.composition["actor"]
 
+    @property
+    def execution(self):
+        return self.composition.get("execution", {"mode": "production"})
+
     def current(self):
         master = self.master
         if (_pinned_file(self.config_path, self.config_sha256, 65536) != self.master_bytes
@@ -102,9 +107,13 @@ def load_profile(config_path, config_sha256):
         raise Rejected("Unsupported live-provider profile")
     closed(master["composition"], ("path", "sha256")); pin(master["composition"]["sha256"])
     body = _pinned_file(path(master["composition"]["path"]), master["composition"]["sha256"], 65536)
-    value = closed(decode_json(body), ("schema", "runtime_endpoint", "journal", "actor", "run_ids",
-                                              "provider", "producer_artifact_sha256", "normalizer_sha256",
-                                              "source_manifest_sha256"))
+    value = decode_json(body)
+    required = {"schema", "runtime_endpoint", "journal", "actor", "run_ids",
+                "provider", "producer_artifact_sha256", "normalizer_sha256",
+                "source_manifest_sha256"}
+    keys = set(value) if type(value) is dict else set()
+    if type(value) is not dict or (keys != required and keys != required | {"execution"}):
+        raise Rejected("Unsupported live-provider profile shape")
     if value["schema"] != "frank.live-provider.composition.v1":
         raise Rejected("Unsupported live-provider composition")
     endpoint = urlsplit(value["runtime_endpoint"])
@@ -126,6 +135,10 @@ def load_profile(config_path, config_sha256):
     provider = closed(value["provider"], ("model", "toolsets", "routes", "max_iterations"))
     if provider != {"model":"openai-codex/gpt-5.6-sol", "toolsets":[], "routes":["local"], "max_iterations":4}:
         raise Rejected("Unsupported first live-provider selection")
+    if "execution" in value:
+        execution = closed(value["execution"], ("mode", "label"))
+        if execution != {"mode": "mock", "label": MOCK_EXECUTION_LABEL}:
+            raise Rejected("Unsupported live-provider execution binding")
     for name in ("producer_artifact_sha256", "normalizer_sha256", "source_manifest_sha256"):
         pin(value[name])
     command(master["wallet"]); command(master["result"], connector=True)
@@ -168,9 +181,12 @@ def compose(profile):
     capture = ConnectorCapture(journal, policy)
     producer = ConnectorResultProducer(capture=capture, claims=claims, verifier=verifier, **master["result"])
     artifacts = RuntimeArtifacts(gateway)
+    test_label = (profile.execution["label"]
+                  if profile.execution["mode"] == "mock" else None)
     adapter = HermesAdapter(actor["integration_id"], value["provider"], agent_factory=factory,
                             connector_capture=capture, connector_producer=producer,
-                            output_materializer=RuntimeOutputMaterializer(artifacts),
+                            output_materializer=RuntimeOutputMaterializer(
+                                artifacts, test_label=test_label),
                             input_hydrator=RuntimeInputHydrator(artifacts))
     registry = Registry({"schema":"frank.integrations.v1", "actors":[actor], "integrations":[{
         "id":actor["integration_id"], "plugin":"hermes-live", "enabled":True, "config":{}}]},
