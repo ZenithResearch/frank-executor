@@ -3,6 +3,23 @@
 ## [Unreleased]
 
 ### Added
+
+- Add a fixed, owner-reviewable mock execution binding for the Anima transport
+  proof and reject any mock artifact that omits its exact test label.
+
+- Add closed Runtime input hydration for the live provider. Frank now verifies
+  the reviewed brief and zero-or-one-reference manifest before dispatch and
+  supplies the exact hash-bound PNG/JPEG bytes in the same pinned Hermes model
+  turn, while retaining a prompt that binds the immutable content digest.
+- Bound the live Hermes actor to the exact automated capabilities and resources
+  of `zenith.anima.brand-package-v1`, excluding its human approval boundary.
+- Added a finite, review-first operator CLI for the separate brand approval
+  Actor, with pinned claim/decision files, committed approval artifacts and
+  stable retry identities.
+- Add restart-safe Hermes artifact output materialization — exact provider
+  responses are retained before content-addressed Runtime writes, deterministic
+  request IDs recover unknown write outcomes, and only declared bounded textual
+  artifacts become Runtime-owned references.
 - Add a pinned subprocess boundary and closed live-provider CLI for Hermes 0.20.0 — Frank can use the isolated Sophia installation without duplicating its environment or accepting model, tool, route, or iteration drift.
 - Add a native-gated Hermes result handoff with immutable connector selectors and exact resume/renewal — live provider output can reach Runtime only after independent native admission while preserving one-send recovery.
 - Add a native-configured empty process workspace client with exact intent recovery and composition-bound journal metadata — authoring no longer needs a review SOP, recording, executor or provider. All720 paired public-source tests pass.

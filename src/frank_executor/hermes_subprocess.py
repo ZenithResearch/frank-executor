@@ -86,13 +86,21 @@ class _HermesProcess:
         self.factory, self.configuration = factory, configuration
         self._lock, self._child = threading.Lock(), None
 
-    def run_conversation(self, prompt, *, task_id):
+    def run_conversation(self, prompt, *, task_id, attachments=None):
         if type(prompt) is not str or not prompt or len(prompt.encode()) > 1024 * 1024:
             raise Rejected("Bounded Hermes prompt required")
         if task_id != self.configuration["session_id"]:
             raise Rejected("Hermes task identity changed")
-        request = json.dumps({**self.configuration, "prompt": prompt, "task_id": task_id},
+        if attachments is None:
+            attachments = ()
+        if (type(attachments) not in {list, tuple} or len(attachments) > 1
+                or any(type(item) is not dict for item in attachments)):
+            raise Rejected("Bounded Hermes attachments required")
+        request = json.dumps({**self.configuration, "prompt": prompt, "task_id": task_id,
+                              "attachments": list(attachments)},
                              sort_keys=True, separators=(",", ":")).encode()
+        if len(request) > 1024 * 1024 + 2048:
+            raise Rejected("Bounded Hermes request required")
         worker = Path(__file__).with_name("hermes_worker.py")
         environment = {"HOME": str(Path.home()), "HERMES_HOME": str(self.factory.hermes_home),
                        "HERMES_API_CALL_STALE_TIMEOUT": "300",

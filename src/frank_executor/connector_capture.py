@@ -210,6 +210,80 @@ class ConnectorCapture:
             db.execute("INSERT INTO connector_dispatch VALUES (?,?,?,?)", values)
         return True
 
+    def retain_hermes_response(self, work, prompt, final_response):
+        """Retain the exact provider response before any derived Runtime writes.
+
+        The response is owner-private recovery evidence. It is not an admitted
+        result and cannot become terminal until normal capture and native result
+        verification complete.
+        """
+        if self.policy.kind != "hermes" or type(prompt) is not str or type(final_response) is not str:
+            raise Rejected("Invalid Hermes response")
+        if len(final_response.encode()) > 1024 * 1024:
+            raise Rejected("Hermes result exceeds bound")
+        work_bytes = canonical(work)
+        with self.journal.connection() as db:
+            db.execute("BEGIN IMMEDIATE")
+            row, retained = self._delivery(db, work)
+            if canonical(retained) != work_bytes:
+                raise Rejected("Hermes response differs from retained work")
+            marker = db.execute(
+                "SELECT * FROM connector_dispatch WHERE effect_key=?", (row["effect_key"],)
+            ).fetchone()
+            values = (
+                row["effect_key"],
+                _sha(work_bytes),
+                self._policy_bytes.decode(),
+                _sha(prompt.encode()),
+                final_response,
+                _sha(final_response.encode()),
+            )
+            if (
+                marker is None
+                or marker["work_sha256"] != values[1]
+                or marker["policy"] != values[2]
+                or marker["prompt_sha256"] != values[3]
+            ):
+                raise Rejected("Hermes response has no matching durable dispatch")
+            prior = db.execute(
+                "SELECT * FROM connector_responses WHERE effect_key=?", (row["effect_key"],)
+            ).fetchone()
+            if prior:
+                if tuple(prior) != values:
+                    raise Rejected("Hermes response is immutable")
+                return False
+            db.execute("INSERT INTO connector_responses VALUES (?,?,?,?,?,?)", values)
+        return True
+
+    def hermes_response(self, work, prompt):
+        if self.policy.kind != "hermes" or type(prompt) is not str:
+            raise Rejected("Invalid Hermes response lookup")
+        work_bytes = canonical(work)
+        with self.journal.connection() as db:
+            row, retained = self._delivery(db, work)
+            if canonical(retained) != work_bytes:
+                raise Rejected("Hermes response differs from retained work")
+            marker = db.execute(
+                "SELECT * FROM connector_dispatch WHERE effect_key=?", (row["effect_key"],)
+            ).fetchone()
+            response = db.execute(
+                "SELECT * FROM connector_responses WHERE effect_key=?", (row["effect_key"],)
+            ).fetchone()
+            if response is None:
+                return None
+            if (
+                marker is None
+                or response["work_sha256"] != _sha(work_bytes)
+                or response["policy"] != self._policy_bytes.decode()
+                or response["prompt_sha256"] != _sha(prompt.encode())
+                or marker["work_sha256"] != response["work_sha256"]
+                or marker["policy"] != response["policy"]
+                or marker["prompt_sha256"] != response["prompt_sha256"]
+                or response["response_sha256"] != _sha(response["final_response"].encode())
+            ):
+                raise Rejected("Retained Hermes response changed")
+            return response["final_response"]
+
     def prepare_hermes(self, result, *, prompt, final_response):
         if self.policy.kind != "hermes" or type(final_response) is not str:
             raise Rejected("Invalid Hermes capture")
@@ -300,6 +374,7 @@ class ConnectorCapture:
                     raise Rejected("Retained Matrix ingress changed")
             else:
                 marker = db.execute("SELECT * FROM connector_dispatch WHERE effect_key=?", (row["effect_key"],)).fetchone()
+                response = db.execute("SELECT * FROM connector_responses WHERE effect_key=?", (row["effect_key"],)).fetchone()
                 if (marker is None or marker["policy"] != capture["policy"]
                         or marker["work_sha256"] != capture["work_sha256"]
                         or marker["prompt_sha256"] != provenance.get("prompt_sha256")
@@ -307,6 +382,17 @@ class ConnectorCapture:
                         or provenance.get("final_response_sha256") != _sha(original["final_response"].encode())
                         or provenance.get("outputs_sha256") != digest(result["outputs"])):
                     raise Rejected("Retained Hermes provenance changed")
+                # Historical captures already retain the exact response in
+                # `original`. New captures also require the pre-materialization
+                # recovery row without invalidating that existing evidence.
+                if response is not None and (
+                    response["policy"] != capture["policy"]
+                    or response["work_sha256"] != capture["work_sha256"]
+                    or response["prompt_sha256"] != marker["prompt_sha256"]
+                    or response["final_response"] != original["final_response"]
+                    or response["response_sha256"] != provenance["final_response_sha256"]
+                ):
+                    raise Rejected("Retained Hermes response changed")
             return {"effect_key": row["effect_key"], "state": "unsigned-capture-pending",
                     "body": result, "work": current, "provenance": provenance,
                     "payload": payload, "resource": capture["resource"],

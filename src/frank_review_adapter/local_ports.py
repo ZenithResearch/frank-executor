@@ -34,11 +34,19 @@ class RuntimeArtifacts:
             raise ReviewFailure("artifact_integrity_mismatch")
         return raw
 
-    async def write(self, content, media_type):
+    async def write(self, content, media_type, *, request_id=None):
         if type(content) is not bytes or len(content) > 1024*1024:
             raise Rejected("Local Runtime artifact exceeds bound")
         reference = {"content_hash":hashlib.sha256(content).hexdigest(),"byte_length":len(content),"media_type":media_type}
-        result = await self.gateway.execute("artifact.put",{"artifact":reference,"content_base64":base64.b64encode(content).decode()},None)
+        if request_id is not None:
+            try:
+                self.gateway.journal.saved_command(request_id)
+            except Rejected:
+                result = await self.gateway.execute("artifact.put",{"artifact":reference,"content_base64":base64.b64encode(content).decode()},None,request_id=request_id)
+            else:
+                result = await self.gateway.replay(request_id)
+        else:
+            result = await self.gateway.execute("artifact.put",{"artifact":reference,"content_base64":base64.b64encode(content).decode()},None)
         if result.get("result",{}).get("artifact") != reference:
             raise ReviewFailure("artifact_write_integrity_mismatch")
         return reference

@@ -18,6 +18,13 @@ audio, capture, result party, actor or Run. Runtime owns the canonical records;
 Frank retains only exact client intent and acknowledgements. Validation delegates
 to Runtime's installed pure compiler. Optional workflow selection stays separate.
 
+The live Hermes provider resolves its reviewed brief and reference manifest only
+through Runtime's public artifact API. It verifies closed schemas and content
+digests before dispatch, and the first profile supplies at most one 512 KiB
+PNG/JPEG reference to the same model turn. Missing input bytes never degrade to a
+filename, browser URL, shared workspace or model guess; see the
+[live-provider pilot](docs/hermes-live-provider-pilot.md).
+
 ## Install and verify
 
 Use Python3.12 and the matching public `process-runtime==0.1.0` distribution, which
